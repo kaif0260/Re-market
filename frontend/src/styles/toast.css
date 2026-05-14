@@ -1,0 +1,49 @@
+/* Re-Market toast — light green surface, white text, polished feel */
+.Toastify__toast {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(22, 101, 52, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  padding: 14px 18px !important;
+  min-height: auto !important;
+}
+
+.Toastify__toast-body {
+  color: #ffffff !important;
+  padding: 0 !important;
+}
+
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.9) !important;
+  opacity: 1 !important;
+}
+
+.Toastify__close-button:hover {
+  color: #ffffff !important;
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.45) !important;
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #22c55e 0%, #4ade80 50%, #86efac 100%) !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 45%, #f87171 100%) !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 55%, #4ade80 100%) !important;
+  color: #ffffff !important;
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, #ca8a04 0%, #eab308 50%, #fde047 100%) !important;
+  color: #ffffff !important;
+}

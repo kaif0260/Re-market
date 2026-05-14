@@ -1,0 +1,41 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
+import { ToastContainer } from 'react-toastify'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-toastify/dist/ReactToastify.css'
+import './styles/toast.css'
+import App from './App.jsx'
+import store from './store/store.js'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <HelmetProvider>
+        <BrowserRouter future={{
+  v7_startTransition: true,
+  v7_relativeSplatPath: true
+}}>
+          <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            toastClassName="remarket-toast"
+            limit={4}
+          />
+        </BrowserRouter>
+      </HelmetProvider>
+    </Provider>
+  </React.StrictMode>,
+)
