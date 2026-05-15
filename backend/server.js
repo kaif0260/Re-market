@@ -27,7 +27,7 @@ import couponRoutes from './routes/coupon.routes.js';
 import { razorpayWebhook } from './controllers/payment.controller.js';
 
 // Load environment variables (env.local overrides .env)
-dotenv.config({ path: path.join(__dirname, 'env.local') });
+dotenv.config();
 
 if (!process.env.JWT_SECRET) process.env.JWT_SECRET = 'remarket_dev_secret_change_in_production';
 if (!process.env.MONGODB_URI) process.env.MONGODB_URI = 'mongodb://localhost:27017/remarket';
