@@ -1,41 +1,61 @@
-import axios from 'axios'
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || '/api'
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000/api";
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-})
+});
 
-// Add token to requests
+// Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
+
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    // Let the browser set multipart boundary for file uploads
-    if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
-      delete config.headers['Content-Type']
+
+    // File upload support
+    if (
+      typeof FormData !== "undefined" &&
+      config.data instanceof FormData
+    ) {
+      delete config.headers["Content-Type"];
     }
-    return config
+
+    return config;
   },
   (error) => Promise.reject(error)
-)
+);
 
-// Handle 401 responses
+// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Auto logout on unauthorized
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
-    }
-    return Promise.reject(error)
-  }
-)
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-export default axiosInstance
+      // Prevent redirect loop
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+
+    // Better network error logging
+    if (!error.response) {
+      console.error("Network/API Error:", error.message);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;
