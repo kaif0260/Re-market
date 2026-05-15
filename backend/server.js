@@ -323,3 +323,5 @@ app.listen(PORT, () => {
   console.log(`✅ Health check: http://localhost:${PORT}/api/health`);
   console.log(`🧪 Test login: POST /api/auth/login {"email":"test@example.com","password":"123456"}`);
 });
+
+//redeploy trigger
