@@ -229,3 +229,28 @@ export const getProductsByBrand = async (req, res) => {
     });
   }
 };
+// @desc    Get deal products
+// @route   GET /api/products/deals
+// @access  Public
+export const getDealsProducts = async (req, res) => {
+  try {
+    const products = await Product.find({
+      status: 'approved',
+      isActive: true,
+      discount: { $gt: 0 }
+    })
+      .populate('seller', 'name email')
+      .limit(10);
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      products
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to fetch deal products'
+    });
+  }
+};
