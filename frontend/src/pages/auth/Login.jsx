@@ -55,7 +55,13 @@ export default function Login() {
       window.location.href = '/'
     } catch (error) {
       console.error('Google Login Error:', error)
-      toast.error('Google login failed')
+      if (error.code === 'auth/popup-blocked') {
+        toast.error('Popup was blocked by browser. Please allow popups for this site and try again.')
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        toast.error('Popup was closed before completing the sign-in.')
+      } else {
+        toast.error('Google login failed: ' + (error.message || 'Unknown error'))
+      }
     }
   }
 

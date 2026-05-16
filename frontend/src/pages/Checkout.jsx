@@ -80,6 +80,8 @@ export default function Checkout() {
 
   const [paySessionRef, setPaySessionRef] = useState('')
 
+  const [createdOrderId, setCreatedOrderId] = useState(null)
+
   useEffect(() => {
     setCodAcknowledged(false)
     setUpiId('')
@@ -197,11 +199,12 @@ export default function Checkout() {
   const submitOrder = useCallback(async () => {
     setPlacing(true)
     try {
-      await axios.post('/orders', {
+      const { data } = await axios.post('/orders', {
         shippingAddress: selectedAddress,
         paymentMethod,
         couponCode: couponApplied ? couponCode.trim().toUpperCase() : undefined
       })
+      setCreatedOrderId(data.order?._id || data.orderId)
       await dispatch(clearCart())
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setShowRewardModal(true)
@@ -819,13 +822,7 @@ export default function Checkout() {
 
       <OrderPlacedPopup
         open={showRewardModal}
-        orderId={
-          '#RM' +
-          Math.floor(
-            10000 +
-            Math.random() * 89999
-          )
-        }
+        orderId={createdOrderId || '#RM' + Math.floor(10000 + Math.random() * 89999)}
         onClose={() => {
 
           setShowRewardModal(false)
