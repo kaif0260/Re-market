@@ -24,8 +24,8 @@ router.post('/register', registerAsSeller);
 // All routes below require seller role
 router.use(isSeller);
 
-// Only approved sellers can create/update/delete products
-router.post('/products', isSellerApproved, upload.array('images', 5), createProduct);
+// Only approved sellers can update/delete products (create allowed for all sellers)
+router.post('/products', upload.array('images', 5), createProduct);
 router.get('/products', getMyProducts);
 router.put('/products/:id', isSellerApproved, upload.array('images', 5), updateProduct);
 router.delete('/products/:id', isSellerApproved, deleteProduct);
