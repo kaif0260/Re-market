@@ -9,7 +9,7 @@ import SellerWallet from '../models/SellerWallet.model.js';
 // Connect to DB and seed
 const seedData = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/remarket');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/remarket');
     console.log('✅ Connected to DB for seeding');
 
     // Clear existing data (optional)
