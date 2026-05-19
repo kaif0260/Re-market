@@ -14,7 +14,9 @@ export default function CouponPopup({
     if (open) {
 
       const duration = 3000
-      const animationEnd = Date.now() + duration
+
+      const animationEnd =
+        Date.now() + duration
 
       const colors = [
         '#ff4d6d',
@@ -26,48 +28,108 @@ export default function CouponPopup({
         '#ff66c4'
       ]
 
-      const randomInRange = (min, max) => {
-        return Math.random() * (max - min) + min
+      const randomInRange = (
+        min,
+        max
+      ) => {
+
+        return (
+          Math.random() *
+            (max - min) +
+          min
+        )
+
       }
 
       const frame = () => {
 
-        /* LEFT CORNER BLAST */
+        /* LEFT */
 
         confetti({
+
           particleCount: 8,
-          angle: randomInRange(55, 125),
-          spread: randomInRange(60, 90),
+
+          angle: randomInRange(
+            55,
+            125
+          ),
+
+          spread: randomInRange(
+            60,
+            90
+          ),
+
           startVelocity: 65,
+
           gravity: 0.9,
-          scalar: randomInRange(0.8, 1.2),
-          drift: randomInRange(-0.5, 0.5),
+
+          scalar: randomInRange(
+            0.8,
+            1.2
+          ),
+
+          drift: randomInRange(
+            -0.5,
+            0.5
+          ),
+
           origin: {
             x: 0,
             y: 1
           },
+
           colors
+
         })
 
-        /* RIGHT CORNER BLAST */
+        /* RIGHT */
 
         confetti({
+
           particleCount: 8,
-          angle: randomInRange(55, 125),
-          spread: randomInRange(60, 90),
+
+          angle: randomInRange(
+            55,
+            125
+          ),
+
+          spread: randomInRange(
+            60,
+            90
+          ),
+
           startVelocity: 65,
+
           gravity: 0.9,
-          scalar: randomInRange(0.8, 1.2),
-          drift: randomInRange(-0.5, 0.5),
+
+          scalar: randomInRange(
+            0.8,
+            1.2
+          ),
+
+          drift: randomInRange(
+            -0.5,
+            0.5
+          ),
+
           origin: {
             x: 1,
             y: 1
           },
+
           colors
+
         })
 
-        if (Date.now() < animationEnd) {
-          requestAnimationFrame(frame)
+        if (
+          Date.now() <
+          animationEnd
+        ) {
+
+          requestAnimationFrame(
+            frame
+          )
+
         }
 
       }
@@ -94,14 +156,14 @@ export default function CouponPopup({
           exit={{
             opacity: 0
           }}
-          className="fixed inset-0 z-[9999] bg-black/20 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] bg-black/30 backdrop-blur-md flex items-center justify-center p-4"
         >
 
           <motion.div
             initial={{
-              scale: 0.7,
+              scale: 0.75,
               opacity: 0,
-              y: 60
+              y: 50
             }}
             animate={{
               scale: 1,
@@ -109,7 +171,7 @@ export default function CouponPopup({
               y: 0
             }}
             exit={{
-              scale: 0.8,
+              scale: 0.85,
               opacity: 0
             }}
             transition={{
@@ -117,14 +179,18 @@ export default function CouponPopup({
               stiffness: 180,
               damping: 16
             }}
-            className="relative w-full max-w-md rounded-[36px] bg-white px-8 py-10 shadow-[0_20px_80px_rgba(0,0,0,0.15)] overflow-hidden"
+            className="relative w-full max-w-[420px] rounded-[28px] sm:rounded-[36px] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/[0.06] px-6 sm:px-8 py-7 sm:py-8 shadow-[0_20px_80px_rgba(0,0,0,0.25)] overflow-hidden"
           >
 
-            {/* TOP BLUE GLOW */}
+            {/* TOP GLOW */}
 
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-52 w-52 rounded-full bg-blue-500/10 blur-3xl"></div>
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-52 w-52 rounded-full bg-blue-500/10 blur-3xl" />
 
-            {/* SUCCESS TICK */}
+            {/* BOTTOM GLOW */}
+
+            <div className="absolute -bottom-24 right-0 h-52 w-52 rounded-full bg-pink-500/10 blur-3xl" />
+
+            {/* SUCCESS ICON */}
 
             <motion.div
               initial={{
@@ -140,7 +206,7 @@ export default function CouponPopup({
                 type: 'spring',
                 stiffness: 250
               }}
-              className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-[#2563eb]"
+              className="relative mx-auto mb-7 flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-2xl"
             >
 
               <motion.svg
@@ -154,7 +220,7 @@ export default function CouponPopup({
                   delay: 0.4,
                   duration: 0.5
                 }}
-                className="h-12 w-12 text-white"
+                className="h-10 w-10 sm:h-12 sm:w-12 text-white"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="3"
@@ -173,7 +239,7 @@ export default function CouponPopup({
 
             {/* CONTENT */}
 
-            <div className="text-center">
+            <div className="relative text-center">
 
               <motion.p
                 initial={{
@@ -187,12 +253,31 @@ export default function CouponPopup({
                 transition={{
                   delay: 0.3
                 }}
-                className="text-gray-500 text-[24px] font-semibold mb-4"
+                className="text-base sm:text-lg text-slate-500 dark:text-slate-400 font-semibold mb-4"
               >
 
-                `{couponCode}` applied
+                Coupon Applied
 
               </motion.p>
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 10
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0
+                }}
+                transition={{
+                  delay: 0.35
+                }}
+                className="inline-flex items-center justify-center px-5 py-2 rounded-2xl bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/[0.06] text-emerald-600 dark:text-emerald-400 font-black text-lg mb-6"
+              >
+
+                {couponCode}
+
+              </motion.div>
 
               <motion.h1
                 initial={{
@@ -206,10 +291,10 @@ export default function CouponPopup({
                 transition={{
                   delay: 0.4
                 }}
-                className="text-[52px] leading-tight font-black text-black mb-5"
+                className="text-3xl sm:text-5xl leading-tight font-black text-slate-900 dark:text-white mb-5"
               >
 
-                You saved ₹{discount}
+                You Saved ₹{discount}
 
               </motion.h1>
 
@@ -223,10 +308,10 @@ export default function CouponPopup({
                 transition={{
                   delay: 0.5
                 }}
-                className="text-gray-500 text-[22px] leading-relaxed mb-10"
+                className="text-sm sm:text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-7"
               >
 
-                You're also getting scratch card on this order
+                Your discount has been successfully applied to this order.
 
               </motion.p>
 
@@ -234,13 +319,13 @@ export default function CouponPopup({
 
               <motion.button
                 whileHover={{
-                  scale: 1.05
+                  scale: 1.04
                 }}
                 whileTap={{
-                  scale: 0.95
+                  scale: 0.96
                 }}
                 onClick={onClose}
-                className="text-pink-500 text-[32px] font-bold"
+                className="inline-flex items-center justify-center h-14 px-8 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xl sm:text-2xl font-bold shadow-xl hover:shadow-pink-500/25 transition-all duration-300"
               >
 
                 Woohoo! Thanks
@@ -248,10 +333,6 @@ export default function CouponPopup({
               </motion.button>
 
             </div>
-
-            {/* BOTTOM GLOW */}
-
-            <div className="absolute -bottom-24 right-0 h-52 w-52 rounded-full bg-pink-500/10 blur-3xl"></div>
 
           </motion.div>
 
