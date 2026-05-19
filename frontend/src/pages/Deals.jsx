@@ -1,106 +1,213 @@
-﻿import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+﻿import {
+  useEffect,
+  useState
+} from 'react'
+
+import {
+  Link
+} from 'react-router-dom'
+
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux'
+
 import axios from '../api/axios'
-import { fetchCart } from '../store/slices/cartSlice'
-import { toast } from 'react-toastify'
-import { FiShoppingCart, FiClock } from 'react-icons/fi'
+
+import {
+  fetchCart
+} from '../store/slices/cartSlice'
+
+import {
+  toast
+} from 'react-toastify'
+
+import {
+  FiShoppingCart,
+  FiClock,
+  FiCopy,
+  FiCheck,
+  FiTag,
+  FiGift,
+  FiArrowRight
+} from 'react-icons/fi'
 
 export default function Deals() {
 
   const dispatch = useDispatch()
 
-  const { isAuthenticated } = useSelector(
-    (state) => state.auth
-  )
+  const { isAuthenticated } =
+    useSelector(
+      (state) => state.auth
+    )
 
   const [products, setProducts] =
+    useState([])
+
+  const [coupons, setCoupons] =
     useState([])
 
   const [loading, setLoading] =
     useState(true)
 
+  const [copied, setCopied] =
+    useState('')
+
   useEffect(() => {
 
-    const fetchDeals = async () => {
+    const fetchDeals =
+      async () => {
 
-      try {
+        try {
 
-        const { data } =
-          await axios.get(
-            '/products/deals'
+          const [
+            productsRes,
+            couponRes
+          ] = await Promise.all([
+
+            axios.get(
+              '/products/deals'
+            ),
+
+            axios.get(
+              '/coupons'
+            ).catch(() => ({
+              data: {
+                coupons: []
+              }
+            }))
+
+          ])
+
+          setProducts(
+            productsRes.data.products || []
           )
 
-        setProducts(
-          data.products || []
-        )
+          setCoupons(
+            couponRes.data.coupons || []
+          )
 
-      } catch (err) {
+        } catch (err) {
 
-        toast.error(
-          err.response?.data?.message ||
-          'Failed to load deals'
-        )
+          toast.error(
+
+            err.response?.data?.message ||
+
+            'Failed to load deals'
+
+          )
+
+        }
+
+        setLoading(false)
 
       }
-
-      setLoading(false)
-
-    }
 
     fetchDeals()
 
   }, [])
 
-  const handleAddToCart = async (
-    productId
-  ) => {
+  const handleAddToCart =
+    async (productId) => {
 
-    if (!isAuthenticated) {
+      if (!isAuthenticated) {
 
-      toast.info(
-        'Please login to add to cart'
-      )
+        toast.info(
+          'Please login to add to cart'
+        )
 
-      return
+        return
+
+      }
+
+      try {
+
+        await axios.post(
+          '/cart',
+          {
+            productId,
+            quantity: 1
+          }
+        )
+
+        dispatch(fetchCart())
+
+        toast.success(
+          'Added to cart'
+        )
+
+      } catch (err) {
+
+        toast.error(
+
+          err.response?.data?.message ||
+
+          'Failed to add to cart'
+
+        )
+
+      }
+
     }
 
-    try {
+  const copyCoupon =
+    async (code) => {
 
-      await axios.post('/cart', {
+      try {
 
-        productId,
+        await navigator.clipboard.writeText(
+          code
+        )
 
-        quantity: 1
+        setCopied(code)
 
-      })
+        toast.success(
+          `Coupon ${code} copied`
+        )
 
-      dispatch(fetchCart())
+        setTimeout(() => {
 
-      toast.success(
-        'Added to cart'
-      )
+          setCopied('')
 
-    } catch (err) {
+        }, 2000)
 
-      toast.error(
-        err.response?.data?.message ||
-        'Failed to add to cart'
-      )
+      } catch {
+
+        toast.error(
+          'Failed to copy coupon'
+        )
+
+      }
 
     }
 
-  }
+  /* LOADING */
 
   if (loading) {
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center">
+      <section className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center">
 
-        <div className="w-14 h-14 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="text-center">
 
-      </div>
+          <div className="relative w-20 h-20 mx-auto mb-6">
+
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-200 dark:border-emerald-500/20" />
+
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+
+          </div>
+
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+
+            Loading Deals
+
+          </h2>
+
+        </div>
+
+      </section>
 
     )
 
@@ -108,31 +215,59 @@ export default function Deals() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-lime-50 py-10 px-4">
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 py-10 sm:py-12">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* HEADER */}
+        {/* HERO */}
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
+        <div className="relative overflow-hidden rounded-[40px] bg-gradient-to-r from-emerald-600 via-green-500 to-teal-600 shadow-2xl mb-14">
 
-          <div>
+          <div className="absolute inset-0 overflow-hidden">
 
-            <h1 className="text-4xl font-black text-gray-900">
-              Hot Deals
-            </h1>
+            <div className="absolute top-[-120px] right-[-120px] w-[320px] h-[320px] rounded-full bg-white/10 blur-3xl" />
 
-            <p className="text-gray-500 mt-2">
-              Best discounted products available today
-            </p>
+            <div className="absolute bottom-[-120px] left-[-120px] w-[280px] h-[280px] rounded-full bg-white/10 blur-3xl" />
 
           </div>
 
-          <div className="flex items-center gap-2 bg-red-100 text-red-600 px-5 py-3 rounded-2xl font-semibold">
+          <div className="relative p-8 sm:p-10 lg:p-14">
 
-            <FiClock />
+            <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-10">
 
-            Limited Time Offers
+              <div className="max-w-3xl">
+
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-sm font-semibold mb-6">
+
+                  <FiGift size={15} />
+
+                  Exclusive Savings
+
+                </div>
+
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-5">
+
+                  Hot Deals & Coupons
+
+                </h1>
+
+                <p className="text-lg sm:text-xl text-emerald-50 leading-relaxed max-w-2xl">
+
+                  Discover premium discounts, trending offers and exclusive coupon codes generated by Re-Market admin.
+
+                </p>
+
+              </div>
+
+              <div className="flex items-center gap-3 px-6 py-4 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 text-white font-bold w-fit">
+
+                <FiClock size={22} />
+
+                Limited Time Offers
+
+              </div>
+
+            </div>
 
           </div>
 
@@ -140,175 +275,362 @@ export default function Deals() {
 
         {/* COUPONS */}
 
-        <div className="mt-14">
+        <section className="mb-16">
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
+
             <div>
-              <h2 className="text-3xl font-black text-gray-900">
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-sm font-semibold mb-5">
+
+                <FiTag size={15} />
+
+                Active Coupon Codes
+
+              </div>
+
+              <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
+
                 Exclusive Coupons
+
               </h2>
-              <p className="text-gray-500 mt-2">
-                Apply at checkout for instant savings
+
+              <p className="text-slate-600 dark:text-slate-300 text-lg">
+
+                Copy and apply these coupons during checkout for instant savings.
+
               </p>
+
             </div>
-            <div className="text-xs md:text-sm bg-emerald-50 text-emerald-700 border border-emerald-100 px-4 py-2 rounded-2xl font-semibold">
-              Limited time offers
+
+          </div>
+
+          {coupons.length === 0 ? (
+
+            <div className="rounded-[36px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl text-center py-20 px-6">
+
+              <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-6">
+
+                <FiGift
+                  size={34}
+                  className="text-slate-400"
+                />
+
+              </div>
+
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-4">
+
+                No Coupons Available
+
+              </h3>
+
+              <p className="text-slate-500 dark:text-slate-400">
+
+                New offers will appear here soon.
+
+              </p>
+
             </div>
-          </div>
 
-          {/* Coupons grid will be rendered by dynamic fetch in a follow-up edit */}
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-            <p className="text-gray-500">
-              Loading coupons...
-            </p>
-          </div>
-        </div>
+          ) : (
 
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-        {/* PRODUCTS */}
-
-        {products.length === 0 ? (
-
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-12 text-center">
-
-            <h2 className="text-2xl font-bold text-gray-900">
-              No deals available right now
-            </h2>
-
-            <p className="text-gray-500 mt-2">
-              Please check again later.
-            </p>
-
-          </div>
-
-        ) : (
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-
-            {products.map((product) => {
-
-              const price =
-                product.discountPrice > 0
-                  ? product.discountPrice
-                  : product.price
-
-              const discount =
-                product.discountPrice > 0
-                  ? Math.round(
-                      (
-                        (
-                          product.price -
-                          product.discountPrice
-                        ) /
-                        product.price
-                      ) * 100
-                    )
-                  : 0
-
-              return (
+              {coupons.map((coupon) => (
 
                 <div
-                  key={product._id}
-                  className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:-translate-y-2 transition-all duration-300"
+                  key={coupon._id}
+                  className="group relative overflow-hidden rounded-[32px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
                 >
 
-                  <Link
-                    to={`/products/${product._id}`}
-                  >
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.04] to-green-500/[0.08]" />
 
-                    <div className="relative">
+                  <div className="relative p-7">
 
-                      <img
-                        src={
-                          product.images?.[0] ||
-                          'https://via.placeholder.com/400'
+                    <div className="flex items-start justify-between gap-4 mb-6">
+
+                      <div className="w-16 h-16 rounded-3xl bg-gradient-to-r from-emerald-500 to-green-500 flex items-center justify-center shadow-xl">
+
+                        <FiGift
+                          size={30}
+                          className="text-white"
+                        />
+
+                      </div>
+
+                      <div className="px-4 py-2 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-bold text-sm">
+
+                        SAVE
+
+                      </div>
+
+                    </div>
+
+                    <div className="mb-5">
+
+                      <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+
+                        {coupon.code}
+
+                      </h3>
+
+                      <p className="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+
+                        {coupon.description ||
+                          'Apply this coupon during checkout.'}
+
+                      </p>
+
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+
+                      <div>
+
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+
+                          Discount
+
+                        </p>
+
+                        <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+
+                          {coupon.discountPercentage || coupon.discount || 0}% OFF
+
+                        </p>
+
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          copyCoupon(
+                            coupon.code
+                          )
                         }
-                        alt={product.name}
-                        className="w-full h-64 object-cover"
-                      />
+                        className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold shadow-xl hover:-translate-y-1 transition-all duration-300"
+                      >
 
-                      {discount > 0 && (
+                        {copied ===
+                        coupon.code ? (
 
-                        <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                          <>
 
-                          {discount}% OFF
+                            <FiCheck size={18} />
 
-                        </div>
+                            Copied
 
-                      )}
+                          </>
 
-                    </div>
+                        ) : (
 
-                  </Link>
+                          <>
 
-                  <div className="p-6">
+                            <FiCopy size={18} />
 
-                    <p className="text-emerald-600 text-sm font-medium">
-                      {product.brand ||
-                        product.category}
-                    </p>
+                            Copy
 
-                    <Link
-                      to={`/products/${product._id}`}
-                    >
+                          </>
 
-                      <h2 className="text-xl font-bold text-gray-900 mt-2 hover:text-emerald-600 transition line-clamp-2">
+                        )}
 
-                        {product.name}
-
-                      </h2>
-
-                    </Link>
-
-                    <div className="flex items-center gap-3 mt-4">
-
-                      <span className="text-2xl font-black text-emerald-600">
-
-                        ₹{price?.toLocaleString()}
-
-                      </span>
-
-                      {product.discountPrice > 0 && (
-
-                        <span className="text-gray-400 line-through">
-
-                          ₹{product.price?.toLocaleString()}
-
-                        </span>
-
-                      )}
+                      </button>
 
                     </div>
-
-                    <button
-                      onClick={() =>
-                        handleAddToCart(
-                          product._id
-                        )
-                      }
-                      className="mt-6 w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-semibold hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
-                    >
-
-                      <FiShoppingCart />
-
-                      Add to Cart
-
-                    </button>
 
                   </div>
 
                 </div>
 
-              )
+              ))}
 
-            })}
+            </div>
+
+          )}
+
+        </section>
+
+        {/* PRODUCTS */}
+
+        <section>
+
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
+
+            <div>
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-sm font-semibold mb-5">
+
+                🔥 Trending Discounts
+
+              </div>
+
+              <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-4">
+
+                Featured Deals
+
+              </h2>
+
+              <p className="text-slate-600 dark:text-slate-300 text-lg">
+
+                Best discounted products available right now.
+
+              </p>
+
+            </div>
 
           </div>
 
-        )}
+          {products.length === 0 ? (
+
+            <div className="rounded-[36px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl text-center py-20 px-6">
+
+              <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-4">
+
+                No Deals Available
+
+              </h2>
+
+              <p className="text-slate-500 dark:text-slate-400">
+
+                Please check again later.
+
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
+
+              {products.map((product) => {
+
+                const price =
+                  product.discountPrice > 0
+                    ? product.discountPrice
+                    : product.price
+
+                const discount =
+                  product.discountPrice > 0
+                    ? Math.round(
+                        (
+                          (
+                            product.price -
+                            product.discountPrice
+                          ) /
+                          product.price
+                        ) * 100
+                      )
+                    : 0
+
+                return (
+
+                  <div
+                    key={product._id}
+                    className="group rounded-[32px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden"
+                  >
+
+                    <Link
+                      to={`/products/${product._id}`}
+                    >
+
+                      <div className="relative overflow-hidden">
+
+                        <img
+                          src={
+                            product.images?.[0] ||
+                            'https://via.placeholder.com/400'
+                          }
+                          alt={product.name}
+                          className="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+
+                        {discount > 0 && (
+
+                          <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-black shadow-lg">
+
+                            {discount}% OFF
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    </Link>
+
+                    <div className="p-6">
+
+                      <p className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+
+                        {product.brand ||
+                          product.category}
+
+                      </p>
+
+                      <Link
+                        to={`/products/${product._id}`}
+                      >
+
+                        <h2 className="text-2xl font-black text-slate-900 dark:text-white mt-3 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
+
+                          {product.name}
+
+                        </h2>
+
+                      </Link>
+
+                      <div className="flex items-center gap-3 mt-5">
+
+                        <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">
+
+                          ₹{price?.toLocaleString()}
+
+                        </span>
+
+                        {product.discountPrice > 0 && (
+
+                          <span className="text-slate-400 line-through text-lg">
+
+                            ₹{product.price?.toLocaleString()}
+
+                          </span>
+
+                        )}
+
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          handleAddToCart(
+                            product._id
+                          )
+                        }
+                        className="mt-7 w-full h-14 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-emerald-500/25"
+                      >
+
+                        <FiShoppingCart size={20} />
+
+                        Add to Cart
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                )
+
+              })}
+
+            </div>
+
+          )}
+
+        </section>
 
       </div>
 
-    </div>
+    </section>
+
   )
+
 }

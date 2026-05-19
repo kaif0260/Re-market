@@ -1,5 +1,14 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import {
+  useState,
+  useRef,
+  useEffect
+} from 'react'
+
+import {
+  motion,
+  AnimatePresence
+} from 'framer-motion'
+
 import {
   MessageCircle,
   X,
@@ -7,251 +16,232 @@ import {
   Bot
 } from 'lucide-react'
 
-import { useSelector } from 'react-redux'
+import {
+  useSelector
+} from 'react-redux'
 
 function ChatBot() {
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] =
+    useState(false)
 
-  const [input, setInput] = useState('')
+  const [input, setInput] =
+    useState('')
 
-  const [messages, setMessages] = useState([
-    {
-      sender: 'bot',
-      text: '👋 Hi! Welcome to Re-Market 💚'
-    }
-  ])
+  const messagesEndRef =
+    useRef(null)
 
-  const { user, isAuthenticated } = useSelector(
+  const [messages, setMessages] =
+    useState([
+      {
+        sender: 'bot',
+        text: '👋 Hi! Welcome to Re-Market 💚'
+      }
+    ])
+
+  const {
+    user,
+    isAuthenticated
+  } = useSelector(
     (state) => state.auth
   )
 
-  const getBotReply = (message) => {
+  useEffect(() => {
 
-    const text = message.toLowerCase().trim()
+    messagesEndRef.current?.scrollIntoView({
+      behavior: 'smooth'
+    })
 
-    // ---------------- NORMAL CHAT ----------------
+  }, [messages])
 
-    if (
-      text === 'ok' ||
-      text === 'okay' ||
-      text === 'hmm' ||
-      text === 'yes'
-    ) {
+  /* BODY SCROLL LOCK */
 
-      return '😊 Great! Anything else I can help you with?'
+  useEffect(() => {
+
+    if (open && window.innerWidth < 640) {
+
+      document.body.style.overflow =
+        'hidden'
+
+    } else {
+
+      document.body.style.overflow =
+        ''
+
     }
 
-    if (
-      text === 'thanks' ||
-      text === 'thank you' ||
-      text === 'thx'
-    ) {
+    return () => {
 
-      return '💚 You are welcome!'
+      document.body.style.overflow =
+        ''
+
     }
 
-    if (
-      text === 'bye' ||
-      text === 'goodbye'
-    ) {
+  }, [open])
 
-      return '👋 Bye! Have a great day 💚'
-    }
+  const getBotReply =
+    (message) => {
 
-    if (
-      text.includes('how are you')
-    ) {
+      const text =
+        message.toLowerCase().trim()
 
-      return '😊 I am doing great! Thanks for asking.'
-    }
+      if (
+        text === 'ok' ||
+        text === 'okay' ||
+        text === 'hmm' ||
+        text === 'yes'
+      ) {
 
-    if (
-      text.includes('who are you')
-    ) {
-
-      return '🤖 I am Re-Market AI Assistant.'
-    }
-
-    if (
-      text.includes('good morning')
-    ) {
-
-      return '☀️ Good morning! Hope you have an amazing day.'
-    }
-
-    if (
-      text.includes('good night')
-    ) {
-
-      return '🌙 Good night! Take care and sleep well.'
-    }
-
-    if (
-      text.includes('i love you')
-    ) {
-
-      return '💚 That is so sweet!'
-    }
-
-    // ---------------- GREETING ----------------
-
-    if (
-      text.includes('hi') ||
-      text.includes('hello') ||
-      text.includes('hey')
-    ) {
-
-      return `👋 Hello ${user?.name || 'there'}! Welcome to Re-Market 💚`
-    }
-
-    // ---------------- LOGIN ----------------
-
-    if (
-      text.includes('login') ||
-      text.includes('sign in')
-    ) {
-
-      return '🔐 You can login using Google or Email.'
-    }
-
-    // ---------------- ORDER ----------------
-
-    if (
-      text.includes('order') ||
-      text.includes('track') ||
-      text.includes('delivery') ||
-      text.includes('parcel')
-    ) {
-
-      if (!isAuthenticated) {
-
-        return '✨ Please login first to track orders.'
+        return '😊 Great! Anything else I can help you with?'
 
       }
 
-      return '📦 Open My Orders section to track your order.'
-    }
+      if (
+        text === 'thanks' ||
+        text === 'thank you' ||
+        text === 'thx'
+      ) {
 
-    // ---------------- REFUND ----------------
-
-    if (
-      text.includes('refund') ||
-      text.includes('return') ||
-      text.includes('cancel')
-    ) {
-
-      return '💸 Refunds usually take 5-7 working days.'
-    }
-
-    // ---------------- PAYMENT ----------------
-
-    if (
-      text.includes('payment') ||
-      text.includes('upi') ||
-      text.includes('card')
-    ) {
-
-      return '💳 We support UPI, Cards and Net Banking.'
-    }
-
-    // ---------------- SELLER ----------------
-
-    if (
-      text.includes('seller') ||
-      text.includes('sell')
-    ) {
-
-      return '🛍️ You can manage products from Seller Dashboard.'
-    }
-
-    // ---------------- PRODUCT ----------------
-
-    if (
-      text.includes('mobile') ||
-      text.includes('laptop') ||
-      text.includes('product')
-    ) {
-
-      return '📱 You can explore products from the Products page.'
-    }
-
-    // ---------------- PROFILE ----------------
-
-    if (
-      text.includes('profile') ||
-      text.includes('account')
-    ) {
-
-      if (!isAuthenticated) {
-
-        return '✨ Please login first.'
+        return '💚 You are welcome!'
 
       }
 
-      return `👤 Hello ${user?.name || 'User'}! Open Profile page to manage account settings.`
+      if (
+        text === 'bye' ||
+        text === 'goodbye'
+      ) {
+
+        return '👋 Bye! Have a great day 💚'
+
+      }
+
+      if (
+        text.includes(
+          'how are you'
+        )
+      ) {
+
+        return '😊 I am doing great! Thanks for asking.'
+
+      }
+
+      if (
+        text.includes(
+          'who are you'
+        )
+      ) {
+
+        return '🤖 I am Re-Market AI Assistant.'
+
+      }
+
+      if (
+        text.includes('login') ||
+        text.includes('sign in')
+      ) {
+
+        return '🔐 You can login using Google or Email.'
+
+      }
+
+      if (
+        text.includes('order') ||
+        text.includes('track')
+      ) {
+
+        if (!isAuthenticated) {
+
+          return '✨ Please login first to track orders.'
+
+        }
+
+        return '📦 Open Orders page to track your order.'
+
+      }
+
+      if (
+        text.includes('refund') ||
+        text.includes('return')
+      ) {
+
+        return '💸 Refunds usually take 5-7 working days.'
+
+      }
+
+      if (
+        text.includes('payment') ||
+        text.includes('upi')
+      ) {
+
+        return '💳 We support UPI, Cards and Net Banking.'
+
+      }
+
+      if (
+        text.includes('seller') ||
+        text.includes('sell')
+      ) {
+
+        return '🛍️ Open Seller Dashboard to manage products.'
+
+      }
+
+      if (
+        text.includes('profile') ||
+        text.includes('account')
+      ) {
+
+        if (!isAuthenticated) {
+
+          return '✨ Please login first.'
+
+        }
+
+        return `👤 Hello ${
+          user?.name || 'User'
+        }! Open Profile page to manage your account.`
+
+      }
+
+      if (
+        text.includes('offer') ||
+        text.includes('discount')
+      ) {
+
+        return '🎁 New offers are available in Deals section.'
+
+      }
+
+      if (
+        text.includes(
+          'wishlist'
+        )
+      ) {
+
+        return '❤️ Wishlist items are available in Wishlist page.'
+
+      }
+
+      const smartReplies = [
+
+        '😊 Could you explain a little more?',
+
+        '💚 I am here to help you.',
+
+        '📱 Please ask in a simpler way.',
+
+        '✨ I will try my best to help you.'
+
+      ]
+
+      return smartReplies[
+        Math.floor(
+          Math.random() *
+          smartReplies.length
+        )
+      ]
+
     }
-
-    // ---------------- OFFERS ----------------
-
-    if (
-      text.includes('offer') ||
-      text.includes('coupon') ||
-      text.includes('discount')
-    ) {
-
-      return '🎁 New exciting offers are available in Deals section.'
-    }
-
-    // ---------------- WISHLIST ----------------
-
-    if (
-      text.includes('wishlist')
-    ) {
-
-      return '❤️ Wishlist items are available in Wishlist section.'
-    }
-
-    // ---------------- SUPPORT ----------------
-
-    if (
-      text.includes('support') ||
-      text.includes('help')
-    ) {
-
-      return '😊 Please explain your issue in detail.'
-    }
-
-    // ---------------- FUNNY ----------------
-
-    if (
-      text.includes('haha') ||
-      text.includes('lol')
-    ) {
-
-      return '😂 Glad you liked it!'
-    }
-
-    // ---------------- DEFAULT ----------------
-
-    const smartReplies = [
-
-      '🤔 I think you are asking about your account or products.',
-
-      '😊 Could you explain a little more?',
-
-      '💚 I am here to help you.',
-
-      '📱 Please try asking in a simpler way.',
-
-      '✨ I will try my best to help you.'
-
-    ]
-
-    return smartReplies[
-      Math.floor(Math.random() * smartReplies.length)
-    ]
-  }
 
   const sendMessage = () => {
 
@@ -275,7 +265,9 @@ function ChatBot() {
 
       const botMessage = {
         sender: 'bot',
-        text: getBotReply(userInput)
+        text: getBotReply(
+          userInput
+        )
       }
 
       setMessages((prev) => [
@@ -283,30 +275,51 @@ function ChatBot() {
         botMessage
       ])
 
-    }, 800)
+    }, 600)
+
   }
 
   return (
+
     <>
 
       {/* FLOAT BUTTON */}
 
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        animate={{ y: [0, -5, 0] }}
+        whileHover={{
+          scale: 1.08
+        }}
+        whileTap={{
+          scale: 0.92
+        }}
+        animate={{
+          y: [0, -5, 0]
+        }}
         transition={{
           repeat: Infinity,
-          duration: 2
+          duration: 2.2
         }}
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-[99999] w-16 h-16 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 text-white shadow-2xl flex items-center justify-center"
+        onClick={() =>
+          setOpen(!open)
+        }
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999]
+        w-14 h-14 sm:w-16 sm:h-16
+        rounded-full
+        bg-gradient-to-r from-emerald-500 to-green-500
+        text-white
+        shadow-[0_20px_50px_rgba(34,197,94,0.35)]
+        hover:shadow-[0_20px_60px_rgba(34,197,94,0.45)]
+        flex items-center justify-center"
       >
 
         {open ? (
-          <X size={28} />
+
+          <X size={24} />
+
         ) : (
-          <MessageCircle size={28} />
+
+          <MessageCircle size={24} />
+
         )}
 
       </motion.button>
@@ -320,8 +333,8 @@ function ChatBot() {
           <motion.div
             initial={{
               opacity: 0,
-              y: 100,
-              scale: 0.8
+              y: 60,
+              scale: 0.92
             }}
             animate={{
               opacity: 1,
@@ -330,31 +343,68 @@ function ChatBot() {
             }}
             exit={{
               opacity: 0,
-              y: 100,
-              scale: 0.8
+              y: 60,
+              scale: 0.92
             }}
             transition={{
-              duration: 0.25
+              duration: 0.22
             }}
-            className="fixed bottom-28 right-6 z-[99999] w-[380px] h-[650px] rounded-3xl overflow-hidden bg-white shadow-2xl flex flex-col border"
+            className="fixed z-[9999]
+            bottom-24
+            right-2
+            sm:right-6
+
+            w-[calc(100vw-16px)]
+            sm:w-[380px]
+
+            max-w-[380px]
+
+            h-[78vh]
+            sm:h-[650px]
+
+            max-h-[700px]
+
+            rounded-[30px]
+
+            overflow-hidden
+
+            bg-white/95 dark:bg-slate-900/95
+
+            backdrop-blur-2xl
+
+            shadow-[0_25px_70px_rgba(0,0,0,0.28)]
+
+            border border-slate-200 dark:border-white/10
+
+            flex flex-col"
           >
 
             {/* HEADER */}
 
-            <div className="bg-gradient-to-r from-emerald-600 to-green-500 p-5 text-white">
+            <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-green-500 p-5 text-white">
 
-              <div className="flex items-center gap-3">
+              <div className="absolute top-[-40px] right-[-40px] w-[120px] h-[120px] rounded-full bg-white/10 blur-2xl" />
 
-                <Bot size={30} />
+              <div className="relative flex items-center gap-3">
+
+                <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/10">
+
+                  <Bot size={28} />
+
+                </div>
 
                 <div>
 
-                  <h2 className="font-bold text-xl">
+                  <h2 className="font-black text-lg tracking-tight">
+
                     Re-Market AI
+
                   </h2>
 
-                  <p className="text-sm">
+                  <p className="text-sm text-emerald-50">
+
                     🟢 Online now
+
                   </p>
 
                 </div>
@@ -365,12 +415,21 @@ function ChatBot() {
 
             {/* MESSAGES */}
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-5 space-y-4 bg-slate-50 dark:bg-slate-950">
 
-              {messages.map((msg, index) => (
+              {messages.map(
+                (msg, index) => (
 
-                <div
+                <motion.div
                   key={index}
+                  initial={{
+                    opacity: 0,
+                    y: 8
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }}
                   className={`flex ${
                     msg.sender === 'user'
                       ? 'justify-end'
@@ -379,46 +438,70 @@ function ChatBot() {
                 >
 
                   <div
-                    className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm shadow ${
+                    className={`max-w-[84%] px-4 py-3 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
                       msg.sender === 'user'
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-white text-gray-800'
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-br-md'
+                        : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-bl-md border border-slate-200 dark:border-white/5'
                     }`}
                   >
+
                     {msg.text}
+
                   </div>
 
-                </div>
+                </motion.div>
 
               ))}
+
+              <div ref={messagesEndRef} />
 
             </div>
 
             {/* INPUT */}
 
-            <div className="p-3 border-t bg-white flex items-center gap-2">
+            <div className="p-3 sm:p-4 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900">
 
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 border rounded-full px-4 py-3 outline-none"
-                onKeyDown={(e) => {
+              <div className="flex items-center gap-2">
 
-                  if (e.key === 'Enter') {
-                    sendMessage()
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) =>
+                    setInput(
+                      e.target.value
+                    )
                   }
+                  placeholder="Type your message..."
+                  className="flex-1 h-12 px-4 rounded-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800 dark:text-white outline-none focus:ring-4 focus:ring-emerald-500/10"
+                  onKeyDown={(e) => {
 
-                }}
-              />
+                    if (
+                      e.key === 'Enter'
+                    ) {
 
-              <button
-                onClick={sendMessage}
-                className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center"
-              >
-                <Send size={20} />
-              </button>
+                      sendMessage()
+
+                    }
+
+                  }}
+                />
+
+                <motion.button
+                  whileHover={{
+                    scale: 1.05
+                  }}
+                  whileTap={{
+                    scale: 0.92
+                  }}
+                  onClick={sendMessage}
+                  className="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 text-white flex items-center justify-center shadow-lg"
+                >
+
+                  <Send size={18} />
+
+                </motion.button>
+
+              </div>
 
             </div>
 
@@ -429,7 +512,9 @@ function ChatBot() {
       </AnimatePresence>
 
     </>
+
   )
+
 }
 
 export default ChatBot

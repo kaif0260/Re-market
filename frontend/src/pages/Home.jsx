@@ -1,262 +1,466 @@
 import { useEffect, useState } from 'react'
+
 import { Helmet } from 'react-helmet-async'
+
+import { Link } from 'react-router-dom'
+
 import axios from '../api/axios'
+
 import ProductCard from '../components/product/ProductCard'
+
 import HeroSection from '../components/HeroSection'
+
 import ImageSlider from '../components/ImageSlider'
+
 import {
   FiArrowRight,
   FiShield,
   FiTrendingUp,
   FiUsers,
-  FiStar,
-  FiCheckCircle
+  FiCheckCircle,
+  FiStar
 } from 'react-icons/fi'
 
 export default function Home() {
-  const [products, setProducts] = useState([])
-  const [resaleListings, setResaleListings] = useState([])
-  const [loading, setLoading] = useState(true)
+
+  const [products, setProducts] =
+    useState([])
+
+  const [resaleListings, setResaleListings] =
+    useState([])
+
+  const [loading, setLoading] =
+    useState(true)
 
   useEffect(() => {
-    const fetch = async () => {
+
+    const fetchData = async () => {
+
       try {
-        const [productsRes, resaleRes] = await Promise.all([
-          axios.get('/products?limit=8&sort=popular'),
+
+        const [
+          productsRes,
+          resaleRes
+        ] = await Promise.all([
+
+          axios.get(
+            '/products?limit=8&sort=popular'
+          ),
+
           axios
             .get('/resale?limit=4')
-            .catch(() => ({ data: { listings: [] } }))
+            .catch(() => ({
+              data: {
+                listings: []
+              }
+            }))
+
         ])
 
-        setProducts(productsRes.data.products || [])
-        setResaleListings(resaleRes.data.listings || [])
+        setProducts(
+          productsRes.data.products || []
+        )
+
+        setResaleListings(
+          resaleRes.data.listings || []
+        )
+
       } catch (err) {
+
         setProducts([])
+
         setResaleListings([])
+
       } finally {
+
         setLoading(false)
+
       }
+
     }
 
-    fetch()
+    fetchData()
+
   }, [])
 
   return (
+
     <>
+
       <Helmet>
+
         <title>
-          Re-Market | Multi-Vendor E-Commerce & Verified Resale
+
+          Re-Market | Verified Multi-Vendor Marketplace
+
         </title>
 
         <meta
           name="description"
-          content="Buy from verified sellers or resell your purchases. Re-Market - Your trusted marketplace."
+          content="Buy from verified sellers or resell your purchases with confidence on Re-Market."
         />
+
       </Helmet>
+
+      {/* HERO */}
 
       <HeroSection />
 
-      <ImageSlider />
+      {/* SLIDER */}
 
-      {/* Trending Products */}
-      <section className="py-10 sm:py-14 lg:py-16 bg-gradient-to-br from-gray-50 to-green-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between mb-10">
+      <section className="relative bg-[#f7fff7] dark:bg-black transition-colors duration-500 overflow-hidden before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.06),transparent_60%)]">
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+          <ImageSlider />
+
+        </div>
+
+      </section>
+
+      {/* TRENDING PRODUCTS */}
+
+      <section className="relative py-14 sm:py-16 lg:py-24 bg-gradient-to-b from-[#f0fdf4] to-white dark:from-black dark:to-[#111827] transition-colors duration-500 overflow-hidden before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_60%)]">
+
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+          <div className="absolute top-0 left-0 w-[320px] h-[320px] bg-emerald-500/5 rounded-full blur-3xl" />
+
+          <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-green-400/5 rounded-full blur-3xl" />
+
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 lg:mb-16">
+
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-sm font-semibold mb-5">
+
+                <FiTrendingUp size={15} />
+
+                Most Popular
+
+              </div>
+
+              <h2 className="text-4xl sm:text-5xl font-black text-black dark:text-white tracking-tight leading-tight mb-4">
+
                 Trending Products
+
               </h2>
 
-              <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-                Discover what's popular right now
+              <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+
+                Explore top-rated products loved by thousands of buyers across Re-Market.
+
               </p>
+
             </div>
 
-            <a
-              href="/products"
-              className="inline-flex items-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            <Link
+              to="/products"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-1 transition-all duration-300"
             >
-              View All <FiArrowRight size={18} />
-            </a>
+
+              View All Products
+
+              <FiArrowRight size={18} />
+
+            </Link>
+
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {[...Array(8)].map((_, i) => (
+
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-7">
+
+              {[...Array(8)].map(
+                (_, i) => (
+
                 <div
                   key={i}
-                  className="bg-white rounded-2xl h-64 sm:h-72 animate-pulse shadow-lg"
+                  className="h-[340px] rounded-3xl bg-[#f0fdf4] dark:bg-[#1f2937] border border-green-100 dark:border-gray-700 animate-pulse"
                 />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {products.map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
-          )}
 
-          {!loading && products.length === 0 && (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FiTrendingUp size={32} className="text-gray-400" />
+              ))}
+
+            </div>
+
+          ) : products.length > 0 ? (
+
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-7">
+
+              {products.map((product) => (
+
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                />
+
+              ))}
+
+            </div>
+
+          ) : (
+
+            <div className="rounded-[32px] bg-[#f0fdf4] dark:bg-[#1f2937] border border-green-100 dark:border-gray-700 shadow-2xl text-center py-20 px-6">
+
+              <div className="w-20 h-20 rounded-full bg-white dark:bg-[#111827] flex items-center justify-center mx-auto mb-6">
+
+                <FiTrendingUp
+                  size={34}
+                  className="text-slate-400"
+                />
+
               </div>
 
-              <p className="text-sm sm:text-base lg:text-lg text-gray-500">
-                No products yet. Check back soon!
+              <h3 className="text-3xl font-black text-black dark:text-white mb-4">
+
+                Products Coming Soon
+
+              </h3>
+
+              <p className="text-gray-700 dark:text-gray-300">
+
+                We are preparing amazing products for you.
+
               </p>
+
             </div>
+
           )}
+
         </div>
+
       </section>
 
-      {/* Verified Resale */}
-      <section className="py-10 sm:py-14 lg:py-16 bg-gradient-to-br from-green-50 to-emerald-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
-              <FiShield size={16} />
-              100% Verified
+      {/* VERIFIED RESALE */}
+
+      <section className="relative py-14 sm:py-16 lg:py-24 bg-[#f7fff7] dark:bg-black transition-colors duration-500 overflow-hidden border-y border-green-100 dark:border-gray-800 before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_60%)]">
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-sm font-semibold mb-5">
+
+              <FiShield size={15} />
+
+              Trusted Resale Marketplace
+
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl sm:text-5xl font-black text-black dark:text-white tracking-tight mb-5">
+
               Verified Resale
+
             </h2>
 
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
-              Buy and sell with confidence. Every resale listing is verified
-              with proof of purchase.
+            <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+
+              Buy and sell confidently with verified proof of purchase and trusted sellers.
+
             </p>
+
           </div>
 
           {resaleListings.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-12">
+
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-7 mb-14">
+
               {resaleListings.map((listing) => (
+
                 <ProductCard
                   key={listing._id}
                   product={{
                     ...listing.originalProduct,
                     ...listing,
-                    image: listing.images?.[0]
+                    image:
+                      listing.images?.[0]
                   }}
                   isResale
                 />
+
               ))}
+
             </div>
+
           ) : (
-            <div className="text-center py-16 mb-12">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FiCheckCircle size={32} className="text-gray-400" />
+
+            <div className="rounded-[32px] bg-[#f0fdf4] dark:bg-[#1f2937] border border-green-100 dark:border-gray-700 text-center py-20 px-6 mb-14 shadow-2xl">
+
+              <div className="w-20 h-20 rounded-full bg-white dark:bg-[#111827] shadow-lg flex items-center justify-center mx-auto mb-6">
+
+                <FiCheckCircle
+                  size={34}
+                  className="text-emerald-500"
+                />
+
               </div>
 
-              <p className="text-sm sm:text-base lg:text-lg text-gray-500">
-                No resale listings yet.
+              <h3 className="text-3xl font-black text-black dark:text-white mb-4">
+
+                No Resale Listings Yet
+
+              </h3>
+
+              <p className="text-gray-700 dark:text-gray-300">
+
+                Start selling your verified products today.
+
               </p>
+
             </div>
+
           )}
 
           <div className="text-center">
-            <a
-              href="/resale"
-              className="inline-flex items-center gap-2 px-5 py-3 sm:px-6 sm:py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+
+            <Link
+              to="/resale"
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold shadow-xl hover:shadow-emerald-500/20 hover:-translate-y-1 transition-all duration-300"
             >
-              Explore Resale <FiArrowRight size={18} />
-            </a>
+
+              Explore Resale Marketplace
+
+              <FiArrowRight size={18} />
+
+            </Link>
+
           </div>
+
         </div>
+
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-10 sm:py-14 lg:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+      {/* FEATURES */}
+
+      <section className="relative py-14 sm:py-16 lg:py-24 bg-gradient-to-b from-[#dff7e8] to-[#eefcf2] dark:from-black dark:to-[#111827] transition-colors duration-500 overflow-hidden before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_60%)]">
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-3xl mx-auto mb-16">
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-[#111827] border border-green-100 dark:border-gray-700 shadow-sm text-slate-700 dark:text-slate-300 text-sm font-semibold mb-5">
+
+              <FiStar size={14} />
+
+              Premium Experience
+
+            </div>
+
+            <h2 className="text-4xl sm:text-5xl font-black text-black dark:text-white tracking-tight mb-5">
+
               Why Choose Re-Market?
+
             </h2>
 
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-              Experience the difference with our premium marketplace
+            <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+
+              Experience a trusted, secure, and community-driven marketplace designed for modern ecommerce.
+
             </p>
+
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="text-center p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-xl transition-all duration-300">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <FiShield size={32} className="text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
+
+            <div className="group relative rounded-[32px] bg-[#1f2937] dark:bg-[#1f2937] border border-gray-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 p-8 text-center overflow-hidden">
+
+              <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-7 shadow-xl">
+
+                <FiShield
+                  size={34}
+                  className="text-white"
+                />
+
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">
-                Verified Sellers
-              </h3>
+              <div className="relative">
 
-              <p className="text-gray-600">
-                Every seller is thoroughly verified with identity checks and
-                business validation.
-              </p>
-            </div>
+                <h3 className="text-2xl font-black text-white mb-4">
 
-            <div className="text-center p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 hover:shadow-xl transition-all duration-300">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <FiCheckCircle size={32} className="text-white" />
+                  Verified Sellers
+
+                </h3>
+
+                <p className="text-gray-300 leading-relaxed">
+
+                  Every seller goes through verification and trust checks for safer shopping.
+
+                </p>
+
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">
-                Secure Payments
-              </h3>
-
-              <p className="text-gray-600">
-                Protected transactions with escrow service and buyer/seller
-                protection guarantee.
-              </p>
             </div>
 
-            <div className="text-center p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 hover:shadow-xl transition-all duration-300">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <FiUsers size={32} className="text-white" />
+            <div className="group relative rounded-[32px] bg-[#1f2937] dark:bg-[#1f2937] border border-gray-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 p-8 text-center overflow-hidden">
+
+              <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-r from-emerald-500 to-green-600 flex items-center justify-center mx-auto mb-7 shadow-xl">
+
+                <FiCheckCircle
+                  size={34}
+                  className="text-white"
+                />
+
               </div>
 
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">
-                Community Driven
-              </h3>
+              <div className="relative">
 
-              <p className="text-gray-600">
-                Join thousands of sellers and buyers in a thriving, trusted
-                community.
-              </p>
+                <h3 className="text-2xl font-black text-white mb-4">
+
+                  Secure Payments
+
+                </h3>
+
+                <p className="text-gray-300 leading-relaxed">
+
+                  Protected transactions with advanced payment security and buyer protection.
+
+                </p>
+
+              </div>
+
             </div>
+
+            <div className="group relative rounded-[32px] bg-[#1f2937] dark:bg-[#1f2937] border border-gray-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 p-8 text-center overflow-hidden">
+
+              <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center mx-auto mb-7 shadow-xl">
+
+                <FiUsers
+                  size={34}
+                  className="text-white"
+                />
+
+              </div>
+
+              <div className="relative">
+
+                <h3 className="text-2xl font-black text-white mb-4">
+
+                  Trusted Community
+
+                </h3>
+
+                <p className="text-gray-300 leading-relaxed">
+
+                  Join thousands of buyers and sellers building a smarter ecommerce experience.
+
+                </p>
+
+              </div>
+
+            </div>
+
           </div>
+
         </div>
+
       </section>
 
-      {/* CTA */}
-      <section className="py-10 sm:py-14 lg:py-16 bg-gradient-to-r from-green-600 to-emerald-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6">
-            Ready to Start Selling?
-          </h2>
-
-          <p className="text-base sm:text-lg text-green-50 mb-8">
-            Join thousands of successful sellers on Re-Market
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/seller/register"
-              className="px-5 py-3 sm:px-6 sm:py-3 bg-white text-green-600 font-bold rounded-2xl hover:shadow-xl transition-all duration-300"
-            >
-              Become a Seller
-            </a>
-
-            <a
-              href="/products"
-              className="px-5 py-3 sm:px-6 sm:py-3 border-2 border-white text-white font-bold rounded-2xl hover:bg-white hover:bg-opacity-10 transition-all duration-300"
-            >
-              Browse Products
-            </a>
-          </div>
-        </div>
-      </section>
     </>
+
   )
+
 }

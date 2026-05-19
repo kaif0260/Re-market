@@ -1,87 +1,248 @@
-import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import axios from '../api/axios'
-import { useSelector } from 'react-redux'
-import { FiShield } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 
-export default function ResaleDetail() {
-  const { id } = useParams()
-  const [listing, setListing] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const { isAuthenticated } = useSelector((state) => state.auth)
+import {
+  FiArrowRight,
+  FiShield,
+  FiTrendingUp,
+  FiDollarSign
+} from 'react-icons/fi'
 
-  useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        const { data } = await axios.get(`/resale/${id}`)
-        setListing(data.listing)
-      } catch (err) {
-        setListing(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchListing()
-  }, [id])
-
-  if (loading) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="aspect-square bg-gray-200 rounded-xl animate-pulse" />
-          <div className="space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-3/4 animate-pulse" />
-            <div className="h-12 bg-gray-200 rounded w-1/3 animate-pulse" />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!listing) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500">Listing not found.</p>
-        <Link to="/resale" className="text-emerald-600 mt-4 inline-block">Back to resale</Link>
-      </div>
-    )
-  }
-
-  const product = listing.originalProduct || {}
-  const images = listing.images?.length ? listing.images : ['https://via.placeholder.com/600']
+export default function ResalePage() {
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link to="/resale" className="text-emerald-600 text-sm mb-4 inline-block">← Back to resale</Link>
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="space-y-4">
-          <div className="aspect-square rounded-xl bg-gray-100 overflow-hidden">
-            <img src={images[0]} alt={product.name} className="w-full h-full object-cover" />
+
+    <div className="min-h-screen bg-slate-50 dark:bg-[#030712] transition-colors duration-300">
+
+      {/* HERO */}
+
+      <section className="relative overflow-hidden bg-gradient-to-r from-emerald-700 via-green-600 to-teal-700">
+
+        <div className="absolute inset-0 bg-black/10" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+
+          <div className="max-w-3xl">
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white text-sm font-semibold mb-6">
+
+              <FiShield size={15} />
+
+              Trusted Resale Marketplace
+
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+
+              Buy & Sell with Confidence
+
+            </h1>
+
+            <p className="mt-6 text-lg sm:text-xl text-emerald-50 leading-relaxed max-w-2xl">
+
+              Explore verified resale listings from trusted Re-Market buyers.
+              Every listing is authenticated for a secure and premium resale experience.
+
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mt-10">
+
+              <Link
+                to="/seller/dashboard"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-[#0f172a] text-white font-bold hover:bg-[#111827] transition-all duration-300 shadow-2xl"
+              >
+
+                Sell an Item
+
+                <FiArrowRight size={18} />
+
+              </Link>
+
+              <Link
+                to="/products"
+                className="inline-flex items-center justify-center px-7 py-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md text-white font-bold hover:bg-white hover:text-emerald-700 transition-all duration-300"
+              >
+
+                Browse Products
+
+              </Link>
+
+            </div>
+
+            {/* STATS */}
+
+            <div className="grid grid-cols-3 gap-6 mt-14">
+
+              <div>
+
+                <h3 className="text-3xl font-black text-white">
+
+                  100%
+
+                </h3>
+
+                <p className="text-emerald-100 text-sm sm:text-base">
+
+                  Verified Listings
+
+                </p>
+
+              </div>
+
+              <div>
+
+                <h3 className="text-3xl font-black text-white">
+
+                  Secure
+
+                </h3>
+
+                <p className="text-emerald-100 text-sm sm:text-base">
+
+                  Transactions
+
+                </p>
+
+              </div>
+
+              <div>
+
+                <h3 className="text-3xl font-black text-white">
+
+                  Trusted
+
+                </h3>
+
+                <p className="text-emerald-100 text-sm sm:text-base">
+
+                  Community
+
+                </p>
+
+              </div>
+
+            </div>
+
           </div>
-          {listing.verifiedPurchase && (
-            <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-100 px-3 py-1 rounded-full text-sm">
-              <FiShield /> Verified purchase
-            </span>
-          )}
+
         </div>
-        <div>
-          <p className="text-gray-500 text-sm">{product.brand}</p>
-          <h1 className="text-2xl font-bold text-gray-900 mt-1">{product.name}</h1>
-          <p className="text-sm text-gray-500 mt-1">Condition: {listing.condition?.replace(/_/g, ' ')}</p>
-          <p className="text-2xl font-bold text-emerald-600 mt-4">₹{listing.resalePrice?.toLocaleString()}</p>
-          <p className="mt-4 text-gray-600">{listing.description}</p>
-          <p className="mt-4 text-sm text-gray-500">Sold by verified Re-Market buyer</p>
-          {listing.status === 'approved' && listing.seller?._id && (
-            <Link
-              to="/checkout"
-              state={{ resaleListingId: listing._id }}
-              className="mt-6 inline-block px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700"
-            >
-              Buy now
-            </Link>
-          )}
+
+      </section>
+
+      {/* FEATURES */}
+
+      <section className="relative py-16 sm:py-20 lg:py-24 bg-slate-50 dark:bg-[#030712] transition-colors duration-300 overflow-hidden">
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_60%)]" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-3xl mx-auto mb-16">
+
+            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-5">
+
+              Why Choose Re-Market?
+
+            </h2>
+
+            <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
+
+              Secure, trusted and verified resale platform designed for modern ecommerce users.
+
+            </p>
+
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {/* CARD 1 */}
+
+            <div className="group rounded-[30px] bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 p-8">
+
+              <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center mb-6">
+
+                <FiShield
+                  className="text-emerald-600 dark:text-emerald-400"
+                  size={28}
+                />
+
+              </div>
+
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4">
+
+                Verified Purchases
+
+              </h3>
+
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base">
+
+                Every resale item includes verified purchase proof from Re-Market.
+
+              </p>
+
+            </div>
+
+            {/* CARD 2 */}
+
+            <div className="group rounded-[30px] bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 p-8">
+
+              <div className="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center mb-6">
+
+                <FiTrendingUp
+                  className="text-blue-600 dark:text-blue-400"
+                  size={28}
+                />
+
+              </div>
+
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4">
+
+                Safe Resale
+
+              </h3>
+
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base">
+
+                Buy and sell securely with trusted buyers and protected transactions.
+
+              </p>
+
+            </div>
+
+            {/* CARD 3 */}
+
+            <div className="group rounded-[30px] bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 p-8">
+
+              <div className="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-500/10 flex items-center justify-center mb-6">
+
+                <FiDollarSign
+                  className="text-purple-600 dark:text-purple-400"
+                  size={28}
+                />
+
+              </div>
+
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4">
+
+                Better Value
+
+              </h3>
+
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base">
+
+                Discover premium products at better prices from verified sellers.
+
+              </p>
+
+            </div>
+
+          </div>
+
         </div>
-      </div>
+
+      </section>
+
     </div>
+
   )
+
 }
