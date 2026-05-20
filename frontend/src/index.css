@@ -323,10 +323,108 @@ textarea {
 
 .dark .border,
 .dark .border-gray-100,
-.dark .border-gray-200 {
+.dark .border-gray-200,
+.dark .border-gray-300 {
 
   border-color:
     rgba(255,255,255,0.08) !important;
+
+}
+
+/* SLATE COLORS FOR DARK MODE */
+
+.dark .text-slate-900 {
+
+  color: #f8fafc !important;
+
+}
+
+.dark .text-slate-800 {
+
+  color: #e2e8f0 !important;
+
+}
+
+.dark .text-slate-700 {
+
+  color: #cbd5e1 !important;
+
+}
+
+.dark .text-slate-600 {
+
+  color: #94a3b8 !important;
+
+}
+
+.dark .text-slate-500 {
+
+  color: #64748b !important;
+
+}
+
+.dark .text-slate-400 {
+
+  color: #475569 !important;
+
+}
+
+.dark .text-slate-300 {
+
+  color: #334155 !important;
+
+}
+
+.dark .bg-slate-50 {
+
+  background-color: #020617 !important;
+
+}
+
+.dark .bg-slate-100 {
+
+  background-color: #0f172a !important;
+
+}
+
+.dark .bg-slate-800 {
+
+  background-color: #0f172a !important;
+
+}
+
+.dark .bg-slate-900 {
+
+  background-color: #020617 !important;
+
+}
+
+/* EMERALD/LIME GRADIENT COLORS FOR DARK MODE */
+
+.dark .from-emerald-50 {
+
+  --tw-gradient-stops: #020617 !important;
+
+}
+
+.dark .to-lime-50 {
+
+  --tw-gradient-stops: #020617 !important;
+
+}
+
+.dark .via-white {
+
+  --tw-gradient-stops: #0f172a !important;
+
+}
+
+.dark .from-emerald-50,
+.dark .from-lime-50,
+.dark .to-lime-50,
+.dark .via-emerald-50 {
+
+  background: #020617 !important;
 
 }
 

@@ -1,94 +1,247 @@
-import { motion } from 'framer-motion'
-
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 import {
   FiArrowRight,
+  FiShoppingBag,
   FiShield,
-  FiTrendingUp
+  FiTruck,
+  FiStar
 } from 'react-icons/fi'
 
 export default function HeroSection() {
 
   return (
 
-    <section className="relative min-h-[88vh] flex items-center overflow-hidden bg-gradient-to-br from-emerald-700 via-green-700 to-teal-900">
+    <section
+      className="
+      relative
+      overflow-hidden
+      bg-gradient-to-br
+      from-emerald-50
+      via-white
+      to-green-50
+      dark:from-slate-950
+      dark:via-slate-900
+      dark:to-slate-950
+    "
+    >
 
       {/* BACKGROUND */}
 
-      <div className="absolute inset-0 overflow-hidden">
-
-        {/* GRID */}
+      <div
+        className="
+        absolute
+        inset-0
+        overflow-hidden
+        pointer-events-none
+      "
+      >
 
         <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)',
-            backgroundSize: '60px 60px'
-          }}
+          className="
+          absolute
+          top-[-120px]
+          right-[-120px]
+          w-[320px]
+          h-[320px]
+          rounded-full
+          bg-emerald-400/20
+          blur-3xl
+        "
         />
 
-        {/* GLOW */}
-
-        <div className="absolute top-[-120px] left-[-120px] w-[320px] h-[320px] bg-emerald-400/20 rounded-full blur-3xl" />
-
-        <div className="absolute bottom-[-150px] right-[-120px] w-[360px] h-[360px] bg-cyan-400/20 rounded-full blur-3xl" />
-
-        {/* FLOATING SHAPES */}
-
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, 0]
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-          className="absolute top-24 left-8 w-24 h-24 bg-white/10 rounded-full blur-2xl"
-        />
-
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-            rotate: [0, -6, 0]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-          className="absolute bottom-24 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"
+        <div
+          className="
+          absolute
+          bottom-[-120px]
+          left-[-120px]
+          w-[280px]
+          h-[280px]
+          rounded-full
+          bg-green-400/20
+          blur-3xl
+        "
         />
 
       </div>
 
       {/* CONTENT */}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 w-full">
+      <div
+        className="
+        relative
+        z-10
+        max-w-7xl
+        mx-auto
+        px-4
+        sm:px-6
+        lg:px-8
+        py-14
+        sm:py-16
+        lg:py-24
+      "
+      >
 
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
+        <div
+          className="
+          grid
+          grid-cols-1
+          lg:grid-cols-2
+          gap-14
+          items-center
+        "
+        >
 
           {/* LEFT */}
 
           <motion.div
             initial={{
               opacity: 0,
-              x: -40
+              y: 30
             }}
             animate={{
               opacity: 1,
-              x: 0
+              y: 0
             }}
             transition={{
-              duration: 0.8
+              duration: 0.7
             }}
-            className="text-center lg:text-left"
+            className="
+            text-center
+            lg:text-left
+          "
           >
 
             {/* BADGE */}
+
+            <motion.div
+              whileHover={{
+                scale: 1.03
+              }}
+              className="
+              inline-flex
+              items-center
+              gap-2
+              px-4
+              py-2
+              rounded-full
+              bg-white/80
+              dark:bg-slate-800/80
+              border
+              border-emerald-200
+              dark:border-slate-700
+              shadow-lg
+              backdrop-blur-md
+              mb-6
+            "
+            >
+
+              <FiStar
+                className="
+                text-emerald-500
+              "
+              />
+
+              <span
+                className="
+                text-sm
+                font-semibold
+                text-slate-700
+                dark:text-slate-200
+              "
+              >
+
+                Trusted Marketplace Platform
+
+              </span>
+
+            </motion.div>
+
+            {/* TITLE */}
+
+            <motion.h1
+              initial={{
+                opacity: 0,
+                y: 20
+              }}
+              animate={{
+                opacity: 1,
+                y: 0
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.1
+              }}
+              className="
+              text-4xl
+              sm:text-5xl
+              lg:text-6xl
+              xl:text-7xl
+              font-black
+              leading-tight
+              tracking-tight
+              text-slate-900
+              dark:text-white
+            "
+            >
+
+              Buy & Sell
+              <span
+                className="
+                block
+                bg-gradient-to-r
+                from-emerald-500
+                to-green-600
+                bg-clip-text
+                text-transparent
+              "
+              >
+
+                Smarter Online
+
+              </span>
+
+            </motion.h1>
+
+            {/* DESC */}
+
+            <motion.p
+              initial={{
+                opacity: 0,
+                y: 20
+              }}
+              animate={{
+                opacity: 1,
+                y: 0
+              }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2
+              }}
+              className="
+              mt-6
+              text-base
+              sm:text-lg
+              lg:text-xl
+              leading-relaxed
+              text-slate-600
+              dark:text-slate-300
+              max-w-2xl
+              mx-auto
+              lg:mx-0
+            "
+            >
+
+              Discover premium products,
+              trusted sellers, and secure
+              shopping experiences with a
+              modern marketplace built for
+              speed, style, and convenience.
+
+            </motion.p>
+
+            {/* BUTTONS */}
 
             <motion.div
               initial={{
@@ -100,171 +253,376 @@ export default function HeroSection() {
                 y: 0
               }}
               transition={{
-                delay: 0.2,
-                duration: 0.6
+                duration: 0.8,
+                delay: 0.3
               }}
-              className="inline-flex items-center gap-2 bg-white/10 border border-white/10 backdrop-blur-md px-5 py-2 rounded-full text-white text-sm font-semibold mb-7"
-            >
-
-              <FiTrendingUp size={16} />
-
-              Trusted Marketplace Platform
-
-            </motion.div>
-
-            {/* TITLE */}
-
-            <motion.h1
-              initial={{
-                opacity: 0,
-                y: 30
-              }}
-              animate={{
-                opacity: 1,
-                y: 0
-              }}
-              transition={{
-                delay: 0.35,
-                duration: 0.8
-              }}
-              className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight mb-6"
-            >
-
-              Shop Smart with{' '}
-
-              <span className="bg-gradient-to-r from-yellow-300 via-orange-200 to-pink-300 bg-clip-text text-transparent">
-
-                Re-Market
-
-              </span>
-
-            </motion.h1>
-
-            {/* DESC */}
-
-            <motion.p
-              initial={{
-                opacity: 0,
-                y: 30
-              }}
-              animate={{
-                opacity: 1,
-                y: 0
-              }}
-              transition={{
-                delay: 0.5,
-                duration: 0.8
-              }}
-              className="text-base sm:text-lg lg:text-xl text-emerald-50/90 leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-9"
-            >
-
-              Discover verified products, secure resale listings, trusted sellers, and a premium shopping experience built for modern buyers and resellers.
-
-            </motion.p>
-
-            {/* BUTTONS */}
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                y: 30
-              }}
-              animate={{
-                opacity: 1,
-                y: 0
-              }}
-              transition={{
-                delay: 0.65,
-                duration: 0.8
-              }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="
+              mt-8
+              flex
+              flex-col
+              sm:flex-row
+              items-center
+              justify-center
+              lg:justify-start
+              gap-4
+            "
             >
 
               <Link
                 to="/products"
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl bg-white text-emerald-700 font-bold text-base hover:bg-emerald-50 transition-all duration-300 shadow-2xl hover:-translate-y-1"
+                className="
+                group
+                relative
+                overflow-hidden
+                inline-flex
+                items-center
+                justify-center
+                gap-3
+                px-8
+                py-4
+                rounded-2xl
+                bg-gradient-to-r
+                from-emerald-500
+                to-green-600
+                text-white
+                font-bold
+                shadow-xl
+                transition-all
+                duration-300
+                hover:scale-105
+                hover:shadow-emerald-500/30
+              "
               >
 
-                Shop Now
+                <span
+                  className="
+                  relative
+                  z-10
+                "
+                >
 
-                <FiArrowRight size={20} />
+                  Shop Now
+
+                </span>
+
+                <FiArrowRight
+                  className="
+                  relative
+                  z-10
+                  transition-transform
+                  duration-300
+                  group-hover:translate-x-1
+                "
+                />
+
+                <span
+                  className="
+                  absolute
+                  inset-0
+                  bg-white/10
+                  opacity-0
+                  group-hover:opacity-100
+                  transition-opacity
+                  duration-300
+                "
+                />
 
               </Link>
 
               <Link
                 to="/resale"
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md text-white font-bold text-base hover:bg-white/15 transition-all duration-300 hover:-translate-y-1"
+                className="
+                inline-flex
+                items-center
+                justify-center
+                gap-3
+                px-8
+                py-4
+                rounded-2xl
+                border
+                border-slate-200
+                dark:border-slate-700
+                bg-white/80
+                dark:bg-slate-900/70
+                text-slate-900
+                dark:text-white
+                font-bold
+                shadow-lg
+                backdrop-blur-md
+                transition-all
+                duration-300
+                hover:bg-emerald-500
+                hover:text-white
+                hover:border-emerald-500
+                hover:scale-105
+                hover:shadow-xl
+              "
               >
 
-                <FiShield size={20} />
+                Sell Products
 
-                Verified Resale
+                <FiShoppingBag />
 
               </Link>
 
             </motion.div>
 
-            {/* STATS */}
+            {/* FEATURES */}
 
             <motion.div
               initial={{
                 opacity: 0,
-                y: 30
+                y: 20
               }}
               animate={{
                 opacity: 1,
                 y: 0
               }}
               transition={{
-                delay: 0.8,
-                duration: 0.8
+                duration: 0.8,
+                delay: 0.4
               }}
-              className="flex flex-wrap justify-center lg:justify-start gap-8 sm:gap-10 mt-12"
+              className="
+              mt-10
+              grid
+              grid-cols-1
+              sm:grid-cols-3
+              gap-4
+            "
             >
 
-              <div>
+              {/* FEATURE */}
 
-                <div className="text-3xl font-black text-white">
+              <div
+                className="
+                group
+                flex
+                items-center
+                gap-4
+                p-4
+                rounded-2xl
+                bg-white/70
+                dark:bg-slate-900/60
+                border
+                border-slate-200
+                dark:border-slate-800
+                backdrop-blur-md
+                shadow-md
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
+              >
 
-                  10K+
+                <div
+                  className="
+                  w-12
+                  h-12
+                  rounded-2xl
+                  bg-emerald-500
+                  text-white
+                  flex
+                  items-center
+                  justify-center
+                  shadow-lg
+                  transition-all
+                  duration-300
+                  group-hover:scale-110
+                "
+                >
+
+                  <FiTruck size={20} />
 
                 </div>
 
-                <div className="text-emerald-100 text-sm mt-1">
+                <div
+                  className="
+                  text-left
+                "
+                >
 
-                  Products
+                  <h4
+                    className="
+                    font-bold
+                    text-slate-900
+                    dark:text-white
+                  "
+                  >
+
+                    Fast Delivery
+
+                  </h4>
+
+                  <p
+                    className="
+                    text-sm
+                    text-slate-600
+                    dark:text-slate-400
+                  "
+                  >
+
+                    Quick shipping
+
+                  </p>
 
                 </div>
 
               </div>
 
-              <div>
+              {/* FEATURE */}
 
-                <div className="text-3xl font-black text-white">
+              <div
+                className="
+                group
+                flex
+                items-center
+                gap-4
+                p-4
+                rounded-2xl
+                bg-white/70
+                dark:bg-slate-900/60
+                border
+                border-slate-200
+                dark:border-slate-800
+                backdrop-blur-md
+                shadow-md
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
+              >
 
-                  5K+
+                <div
+                  className="
+                  w-12
+                  h-12
+                  rounded-2xl
+                  bg-emerald-500
+                  text-white
+                  flex
+                  items-center
+                  justify-center
+                  shadow-lg
+                  transition-all
+                  duration-300
+                  group-hover:scale-110
+                "
+                >
+
+                  <FiShield size={20} />
 
                 </div>
 
-                <div className="text-emerald-100 text-sm mt-1">
+                <div
+                  className="
+                  text-left
+                "
+                >
 
-                  Verified Sellers
+                  <h4
+                    className="
+                    font-bold
+                    text-slate-900
+                    dark:text-white
+                  "
+                  >
+
+                    Secure Payment
+
+                  </h4>
+
+                  <p
+                    className="
+                    text-sm
+                    text-slate-600
+                    dark:text-slate-400
+                  "
+                  >
+
+                    Safe checkout
+
+                  </p>
 
                 </div>
 
               </div>
 
-              <div>
+              {/* FEATURE */}
 
-                <div className="text-3xl font-black text-white">
+              <div
+                className="
+                group
+                flex
+                items-center
+                gap-4
+                p-4
+                rounded-2xl
+                bg-white/70
+                dark:bg-slate-900/60
+                border
+                border-slate-200
+                dark:border-slate-800
+                backdrop-blur-md
+                shadow-md
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:shadow-xl
+              "
+              >
 
-                  50K+
+                <div
+                  className="
+                  w-12
+                  h-12
+                  rounded-2xl
+                  bg-emerald-500
+                  text-white
+                  flex
+                  items-center
+                  justify-center
+                  shadow-lg
+                  transition-all
+                  duration-300
+                  group-hover:scale-110
+                "
+                >
+
+                  <FiStar size={20} />
 
                 </div>
 
-                <div className="text-emerald-100 text-sm mt-1">
+                <div
+                  className="
+                  text-left
+                "
+                >
 
-                  Happy Customers
+                  <h4
+                    className="
+                    font-bold
+                    text-slate-900
+                    dark:text-white
+                  "
+                  >
+
+                    Top Quality
+
+                  </h4>
+
+                  <p
+                    className="
+                    text-sm
+                    text-slate-600
+                    dark:text-slate-400
+                  "
+                  >
+
+                    Trusted products
+
+                  </p>
 
                 </div>
 
@@ -274,73 +632,180 @@ export default function HeroSection() {
 
           </motion.div>
 
-          {/* RIGHT */}
+          {/* RIGHT IMAGE */}
 
           <motion.div
             initial={{
               opacity: 0,
-              x: 40
+              scale: 0.9
             }}
             animate={{
               opacity: 1,
-              x: 0
+              scale: 1
             }}
             transition={{
-              duration: 0.8,
-              delay: 0.2
+              duration: 0.8
             }}
-            className="relative hidden lg:flex justify-center items-center"
+            className="
+            relative
+            flex
+            justify-center
+            lg:justify-end
+          "
           >
 
             {/* MAIN CARD */}
 
-            <motion.div
-              animate={{
-                y: [0, -12, 0]
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: 'easeInOut'
-              }}
-              className="relative w-[420px] h-[420px] rounded-[40px] bg-white/10 border border-white/10 backdrop-blur-2xl shadow-[0_30px_80px_rgba(0,0,0,0.35)] overflow-hidden"
+            <div
+              className="
+              relative
+              w-full
+              max-w-[560px]
+            "
             >
 
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+              <motion.div
+                animate={{
+                  y: [0, -10, 0]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
+                className="
+                relative
+                rounded-[32px]
+                overflow-hidden
+                border
+                border-white/20
+                shadow-[0_25px_80px_rgba(16,185,129,0.18)]
+                bg-white/60
+                dark:bg-slate-900/70
+                backdrop-blur-xl
+              "
+              >
 
-              <div className="absolute top-8 left-8 right-8 flex justify-between items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop"
+                  alt="Hero Product"
+                  className="
+                  w-full
+                  h-[300px]
+                  sm:h-[420px]
+                  lg:h-[520px]
+                  object-cover
+                "
+                />
 
-                <div>
+                {/* OVERLAY */}
 
-                  <div className="w-24 h-3 rounded-full bg-white/30 mb-3" />
+                <div
+                  className="
+                  absolute
+                  inset-0
+                  bg-gradient-to-t
+                  from-black/50
+                  via-black/10
+                  to-transparent
+                "
+                />
 
-                  <div className="w-32 h-3 rounded-full bg-white/20" />
+                {/* FLOATING CARD */}
 
-                </div>
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    y: 20
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.4
+                  }}
+                  className="
+                  absolute
+                  bottom-5
+                  left-5
+                  right-5
+                  rounded-2xl
+                  bg-white/90
+                  dark:bg-slate-900/85
+                  backdrop-blur-xl
+                  p-5
+                  shadow-xl
+                "
+                >
 
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-yellow-300 to-orange-400 shadow-xl" />
+                  <div
+                    className="
+                    flex
+                    items-center
+                    justify-between
+                    gap-4
+                  "
+                  >
 
-              </div>
+                    <div>
 
-              <div className="absolute left-8 right-8 top-32 h-40 rounded-3xl bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 shadow-2xl" />
+                      <h3
+                        className="
+                        text-lg
+                        sm:text-xl
+                        font-bold
+                        text-slate-900
+                        dark:text-white
+                      "
+                      >
 
-              <div className="absolute left-8 right-8 bottom-10 space-y-4">
+                        Premium Collection
 
-                <div className="h-3 rounded-full bg-white/25 w-full" />
+                      </h3>
 
-                <div className="h-3 rounded-full bg-white/20 w-4/5" />
+                      <p
+                        className="
+                        mt-1
+                        text-sm
+                        text-slate-600
+                        dark:text-slate-400
+                      "
+                      >
 
-                <div className="flex gap-4 pt-4">
+                        Trending products with
+                        premium quality
 
-                  <div className="flex-1 h-14 rounded-2xl bg-white/15" />
+                      </p>
 
-                  <div className="flex-1 h-14 rounded-2xl bg-white/10" />
+                    </div>
 
-                </div>
+                    <div
+                      className="
+                      shrink-0
+                      px-4
+                      py-2
+                      rounded-xl
+                      bg-emerald-500
+                      text-white
+                      text-sm
+                      font-bold
+                      shadow-lg
+                    "
+                    >
 
-              </div>
+                      New
 
-            </motion.div>
+                    </div>
+
+                  </div>
+
+                </motion.div>
+
+              </motion.div>
+
+            </div>
 
           </motion.div>
 

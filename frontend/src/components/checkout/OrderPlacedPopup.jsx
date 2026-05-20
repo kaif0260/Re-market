@@ -1,4 +1,4 @@
- import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect } from 'react'
 import confetti from 'canvas-confetti'
 
@@ -11,128 +11,136 @@ export default function OrderPlacedPopup({
 
   useEffect(() => {
 
-    if (open) {
+    if (!open) return
 
-      const duration = 3000
+    const duration = 3500
 
-      const animationEnd =
-        Date.now() + duration
+    const animationEnd =
+      Date.now() + duration
 
-      const colors = [
-        '#22c55e',
-        '#4ade80',
-        '#86efac',
-        '#10b981',
-        '#34d399',
-        '#facc15',
-        '#38bdf8'
-      ]
+    const colors = [
+      '#22c55e',
+      '#4ade80',
+      '#86efac',
+      '#10b981',
+      '#34d399',
+      '#facc15',
+      '#38bdf8'
+    ]
 
-      const randomInRange = (
-        min,
-        max
-      ) => {
+    const randomInRange = (
+      min,
+      max
+    ) => {
 
-        return (
-          Math.random() *
-            (max - min) +
-          min
+      return (
+        Math.random() *
+          (max - min) +
+        min
+      )
+
+    }
+
+    const frame = () => {
+
+      /* LEFT CORNER */
+
+      confetti({
+
+        particleCount:
+          window.innerWidth < 640
+            ? 5
+            : 8,
+
+        angle: randomInRange(
+          55,
+          125
+        ),
+
+        spread: randomInRange(
+          70,
+          100
+        ),
+
+        startVelocity: 70,
+
+        gravity: 0.9,
+
+        scalar: randomInRange(
+          0.7,
+          1.2
+        ),
+
+        drift: randomInRange(
+          -0.5,
+          0.5
+        ),
+
+        origin: {
+          x: 0,
+          y: 1
+        },
+
+        colors
+
+      })
+
+      /* RIGHT CORNER */
+
+      confetti({
+
+        particleCount:
+          window.innerWidth < 640
+            ? 5
+            : 8,
+
+        angle: randomInRange(
+          55,
+          125
+        ),
+
+        spread: randomInRange(
+          70,
+          100
+        ),
+
+        startVelocity: 70,
+
+        gravity: 0.9,
+
+        scalar: randomInRange(
+          0.7,
+          1.2
+        ),
+
+        drift: randomInRange(
+          -0.5,
+          0.5
+        ),
+
+        origin: {
+          x: 1,
+          y: 1
+        },
+
+        colors
+
+      })
+
+      if (
+        Date.now() <
+        animationEnd
+      ) {
+
+        requestAnimationFrame(
+          frame
         )
 
       }
 
-      const frame = () => {
-
-        confetti({
-
-          particleCount: 8,
-
-          angle: randomInRange(
-            55,
-            125
-          ),
-
-          spread: randomInRange(
-            65,
-            95
-          ),
-
-          startVelocity: 65,
-
-          gravity: 0.9,
-
-          scalar: randomInRange(
-            0.8,
-            1.2
-          ),
-
-          drift: randomInRange(
-            -0.5,
-            0.5
-          ),
-
-          origin: {
-            x: 0,
-            y: 1
-          },
-
-          colors
-
-        })
-
-        confetti({
-
-          particleCount: 8,
-
-          angle: randomInRange(
-            55,
-            125
-          ),
-
-          spread: randomInRange(
-            65,
-            95
-          ),
-
-          startVelocity: 65,
-
-          gravity: 0.9,
-
-          scalar: randomInRange(
-            0.8,
-            1.2
-          ),
-
-          drift: randomInRange(
-            -0.5,
-            0.5
-          ),
-
-          origin: {
-            x: 1,
-            y: 1
-          },
-
-          colors
-
-        })
-
-        if (
-          Date.now() <
-          animationEnd
-        ) {
-
-          requestAnimationFrame(
-            frame
-          )
-
-        }
-
-      }
-
-      frame()
-
     }
+
+    frame()
 
   }, [open])
 
@@ -152,90 +160,89 @@ export default function OrderPlacedPopup({
           exit={{
             opacity: 0
           }}
-          className="fixed inset-0 z-[9999] bg-black/30 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] bg-black/30 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4"
         >
 
           <motion.div
             initial={{
               scale: 0.75,
               opacity: 0,
-              y: 50
+              y: 60
             }}
             animate={{
-              scale: 1,
+              scale: [0.8, 1.03, 1],
               opacity: 1,
               y: 0
             }}
             exit={{
-              scale: 0.85,
+              scale: 0.9,
               opacity: 0
             }}
             transition={{
-              type: 'spring',
-              stiffness: 180,
-              damping: 16
+              duration: 0.45,
+              ease: 'easeOut'
             }}
-            className="relative w-full max-w-[430px] rounded-[30px] sm:rounded-[36px] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/[0.06] px-6 sm:px-8 py-7 sm:py-8 shadow-[0_20px_80px_rgba(0,0,0,0.25)] overflow-hidden"
+            className="relative w-full max-w-[92vw] sm:max-w-[430px] overflow-hidden rounded-[30px] sm:rounded-[38px] border border-white/10 bg-white dark:bg-[#0f172a] shadow-[0_25px_100px_rgba(0,0,0,0.22)]"
           >
 
             {/* TOP GLOW */}
 
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-52 w-52 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl"></div>
 
             {/* BOTTOM GLOW */}
 
-            <div className="absolute -bottom-24 right-0 h-52 w-52 rounded-full bg-green-500/10 blur-3xl" />
+            <div className="absolute -bottom-24 right-0 h-56 w-56 rounded-full bg-green-500/10 blur-3xl"></div>
 
-            {/* SUCCESS ICON */}
+            <div className="relative z-10 px-5 sm:px-8 py-7 sm:py-9 text-center">
 
-            <motion.div
-              initial={{
-                scale: 0,
-                rotate: -180
-              }}
-              animate={{
-                scale: 1,
-                rotate: 0
-              }}
-              transition={{
-                delay: 0.2,
-                type: 'spring',
-                stiffness: 250
-              }}
-              className="relative mx-auto mb-7 flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-green-600 shadow-2xl"
-            >
+              {/* SUCCESS ICON */}
 
-              <motion.svg
+              <motion.div
                 initial={{
-                  pathLength: 0
+                  scale: 0,
+                  rotate: -180
                 }}
                 animate={{
-                  pathLength: 1
+                  scale: 1,
+                  rotate: 0
                 }}
                 transition={{
-                  delay: 0.4,
-                  duration: 0.5
+                  delay: 0.15,
+                  type: 'spring',
+                  stiffness: 220
                 }}
-                className="h-10 w-10 sm:h-12 sm:w-12 text-white"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                viewBox="0 0 24 24"
+                className="mx-auto mb-6 flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-green-600 shadow-2xl"
               >
 
-                <motion.path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
+                <motion.svg
+                  initial={{
+                    pathLength: 0
+                  }}
+                  animate={{
+                    pathLength: 1
+                  }}
+                  transition={{
+                    delay: 0.35,
+                    duration: 0.5
+                  }}
+                  className="h-10 w-10 sm:h-12 sm:w-12 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  viewBox="0 0 24 24"
+                >
 
-              </motion.svg>
+                  <motion.path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
 
-            </motion.div>
+                </motion.svg>
 
-            {/* CONTENT */}
+              </motion.div>
 
-            <div className="relative text-center">
+              {/* TITLE */}
 
               <motion.p
                 initial={{
@@ -247,33 +254,37 @@ export default function OrderPlacedPopup({
                   y: 0
                 }}
                 transition={{
-                  delay: 0.3
+                  delay: 0.25
                 }}
-                className="text-base sm:text-lg text-slate-500 dark:text-slate-400 font-semibold mb-4"
+                className="text-sm sm:text-lg font-semibold text-slate-500 dark:text-slate-400 mb-4"
               >
 
                 Order Confirmed
 
               </motion.p>
 
+              {/* HEADING */}
+
               <motion.h1
                 initial={{
                   opacity: 0,
-                  y: 20
+                  y: 15
                 }}
                 animate={{
                   opacity: 1,
                   y: 0
                 }}
                 transition={{
-                  delay: 0.4
+                  delay: 0.35
                 }}
-                className="text-3xl sm:text-5xl leading-tight font-black text-slate-900 dark:text-white mb-5"
+                className="text-[34px] sm:text-[52px] leading-tight font-black text-slate-900 dark:text-white mb-5"
               >
 
                 🎉 Congratulations!
 
               </motion.h1>
+
+              {/* DESCRIPTION */}
 
               <motion.p
                 initial={{
@@ -283,9 +294,9 @@ export default function OrderPlacedPopup({
                   opacity: 1
                 }}
                 transition={{
-                  delay: 0.5
+                  delay: 0.4
                 }}
-                className="text-sm sm:text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-7"
+                className="text-sm sm:text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-8"
               >
 
                 Your order has been placed successfully and is now being processed.
@@ -304,39 +315,31 @@ export default function OrderPlacedPopup({
                   scale: 1
                 }}
                 transition={{
-                  delay: 0.55
+                  delay: 0.45
                 }}
-                className="rounded-[26px] bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-white/[0.06] p-5 sm:p-6 mb-7"
+                className="rounded-[26px] bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-white/[0.06] p-5 sm:p-6 mb-8"
               >
 
-                <div className="flex items-center justify-between mb-4 gap-4">
+                <div className="flex items-center justify-between gap-4 mb-4">
 
-                  <span className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
-
+                  <span className="text-sm sm:text-base text-slate-500 dark:text-slate-400">
                     Order ID
-
                   </span>
 
-                  <span className="font-black text-slate-900 dark:text-white text-sm sm:text-lg">
-
+                  <span className="text-sm sm:text-lg font-black text-slate-900 dark:text-white break-all text-right">
                     #{orderId}
-
                   </span>
 
                 </div>
 
                 <div className="flex items-center justify-between gap-4">
 
-                  <span className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">
-
+                  <span className="text-sm sm:text-base text-slate-500 dark:text-slate-400">
                     You Saved
-
                   </span>
 
-                  <span className="font-black text-emerald-600 dark:text-emerald-400 text-xl sm:text-2xl">
-
+                  <span className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">
                     ₹{savedAmount}
-
                   </span>
 
                 </div>
@@ -353,7 +356,7 @@ export default function OrderPlacedPopup({
                   scale: 0.96
                 }}
                 onClick={onClose}
-                className="inline-flex items-center justify-center h-14 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white text-lg sm:text-xl font-bold shadow-xl hover:shadow-emerald-500/25 transition-all duration-300"
+                className="inline-flex items-center justify-center h-12 sm:h-14 px-7 sm:px-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white text-lg sm:text-2xl font-bold shadow-xl hover:shadow-emerald-500/30 transition-all duration-300"
               >
 
                 Track Order

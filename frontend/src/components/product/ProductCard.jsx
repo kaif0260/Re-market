@@ -1,9 +1,17 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { fetchCart } from '../../store/slices/cartSlice'
+import { motion } from 'framer-motion'
+
+import { useState } from 'react'
+
+import {
+  useDispatch,
+  useSelector
+} from 'react-redux'
+
+import {
+  fetchCart
+} from '../../store/slices/cartSlice'
 
 import { toast } from 'react-toastify'
 
@@ -30,11 +38,13 @@ export default function ProductCard({
   const [imageLoaded, setImageLoaded] =
     useState(false)
 
-  const dispatch = useDispatch()
+  const dispatch =
+    useDispatch()
 
-  const { isAuthenticated } = useSelector(
-    (state) => state.auth
-  )
+  const { isAuthenticated } =
+    useSelector(
+      (state) => state.auth
+    )
 
   const price =
     product.resalePrice ??
@@ -50,121 +60,123 @@ export default function ProductCard({
       ? product.price
       : null
 
-  const discount = originalPrice
-    ? Math.round(
-        (
-          (originalPrice - price) /
-          originalPrice
-        ) * 100
-      )
-    : 0
-
-  const handleAddToCart = async (e) => {
-
-    e.preventDefault()
-
-    e.stopPropagation()
-
-    if (!isAuthenticated) {
-
-      toast.info(
-        'Please login to add to cart'
-      )
-
-      return
-
-    }
-
-    setAdding(true)
-
-    try {
-
-      await axios.post('/cart', {
-
-        productId: product._id,
-
-        quantity: 1
-
-      })
-
-      dispatch(fetchCart())
-
-      toast.success(
-        'Added to cart'
-      )
-
-    } catch (err) {
-
-      toast.error(
-
-        err.response?.data?.message ||
-        'Failed to add to cart'
-
-      )
-
-    }
-
-    setAdding(false)
-
-  }
-
-  const handleWishlist = async (e) => {
-
-    e.preventDefault()
-
-    if (!isAuthenticated) {
-
-      toast.info(
-        'Please login to add to wishlist'
-      )
-
-      return
-
-    }
-
-    try {
-
-      if (wishlisted) {
-
-        await axios.delete(
-          `/wishlist/${product._id}`
+  const discount =
+    originalPrice
+      ? Math.round(
+          (
+            (originalPrice - price) /
+            originalPrice
+          ) * 100
         )
+      : 0
 
-        setWishlisted(false)
+  const handleAddToCart =
+    async (e) => {
+
+      e.preventDefault()
+
+      e.stopPropagation()
+
+      if (!isAuthenticated) {
 
         toast.info(
-          'Removed from wishlist'
+          'Please login first'
         )
 
-      } else {
+        return
+
+      }
+
+      setAdding(true)
+
+      try {
 
         await axios.post(
-          '/wishlist',
+          '/cart',
           {
-            productId: product._id
+            productId:
+              product._id,
+            quantity: 1
           }
         )
 
-        setWishlisted(true)
+        dispatch(fetchCart())
 
         toast.success(
-          'Added to wishlist'
+          'Added to cart'
+        )
+
+      } catch (err) {
+
+        toast.error(
+
+          err.response?.data?.message ||
+          'Failed to add'
+
         )
 
       }
 
-    } catch (err) {
-
-      toast.error(
-
-        err.response?.data?.message ||
-        'Failed'
-
-      )
+      setAdding(false)
 
     }
 
-  }
+  const handleWishlist =
+    async (e) => {
+
+      e.preventDefault()
+
+      e.stopPropagation()
+
+      if (!isAuthenticated) {
+
+        toast.info(
+          'Please login first'
+        )
+
+        return
+
+      }
+
+      try {
+
+        if (wishlisted) {
+
+          await axios.delete(
+            `/wishlist/${product._id}`
+          )
+
+          setWishlisted(false)
+
+          toast.info(
+            'Removed from wishlist'
+          )
+
+        } else {
+
+          await axios.post(
+            '/wishlist',
+            {
+              productId:
+                product._id
+            }
+          )
+
+          setWishlisted(true)
+
+          toast.success(
+            'Added to wishlist'
+          )
+
+        }
+
+      } catch (err) {
+
+        toast.error('Failed')
+
+      }
+
+    }
 
   const url = isResale
     ? `/resale/${product._id}`
@@ -175,17 +187,17 @@ export default function ProductCard({
     <motion.div
       initial={{
         opacity: 0,
-        y: 18
+        y: 20
       }}
       animate={{
         opacity: 1,
         y: 0
       }}
-      whileHover={{
-        y: -8
-      }}
       transition={{
         duration: 0.3
+      }}
+      whileHover={{
+        y: -5
       }}
       className="group h-full"
     >
@@ -195,19 +207,15 @@ export default function ProductCard({
         className="block h-full"
       >
 
-        <div className="relative h-full flex flex-col bg-[#f0fdf4] dark:bg-[#1f2937] rounded-3xl overflow-hidden border border-green-100 dark:border-gray-700 shadow-lg hover:shadow-2xl hover:shadow-emerald-500/20 dark:hover:shadow-emerald-500/10 transition-all duration-500">
-
-          {/* PREMIUM GLOW */}
-
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.10),transparent_60%)]" />
+        <div className="relative flex flex-col h-full overflow-hidden rounded-2xl bg-white dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300">
 
           {/* IMAGE */}
 
-          <div className="relative aspect-[1/1] overflow-hidden bg-green-50 dark:bg-[#374151]">
+          <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-[#374151]">
 
             {!imageLoaded && (
 
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-[#111827] dark:via-[#1e293b] dark:to-[#111827]" />
+              <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
 
             )}
 
@@ -215,31 +223,27 @@ export default function ProductCard({
               src={
                 product.images?.[0] ||
                 product.image ||
-                'https://via.placeholder.com/500x500?text=No+Image'
+                'https://via.placeholder.com/500'
               }
               alt={product.name}
-              className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${
+              onLoad={() =>
+                setImageLoaded(true)
+              }
+              className={`w-full h-full object-cover transition duration-500 group-hover:scale-105 ${
                 imageLoaded
                   ? 'opacity-100'
                   : 'opacity-0'
               }`}
-              onLoad={() =>
-                setImageLoaded(true)
-              }
             />
-
-            {/* OVERLAY */}
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
 
             {/* BADGES */}
 
-            <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+            <div className="absolute top-2 left-2 flex flex-col gap-2 z-10">
 
               {discount > 0 &&
                 !isResale && (
 
-                <span className="bg-red-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg">
+                <span className="bg-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full">
 
                   {discount}% OFF
 
@@ -250,9 +254,9 @@ export default function ProductCard({
               {isResale &&
                 product.verifiedPurchase && (
 
-                <span className="bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                <span className="bg-emerald-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
 
-                  <FiShield size={12} />
+                  <FiShield size={11} />
 
                   Verified
 
@@ -264,39 +268,35 @@ export default function ProductCard({
 
             {/* WISHLIST */}
 
-            <motion.button
-              whileHover={{
-                scale: 1.1
-              }}
-              whileTap={{
-                scale: 0.9
-              }}
+            <button
               onClick={handleWishlist}
-              className={`absolute top-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 shadow-lg ${
+              className={`absolute top-2 right-2 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
                 wishlisted
                   ? 'bg-red-500 text-white'
-                  : 'bg-white/90 dark:bg-[#0f172a]/90 text-slate-700 dark:text-white hover:text-emerald-600'
+                  : 'bg-white dark:bg-[#111827] text-black dark:text-white hover:bg-emerald-600 hover:text-white'
               }`}
             >
 
               <FiHeart
+                size={17}
                 className={
                   wishlisted
                     ? 'fill-current'
                     : ''
                 }
-                size={18}
               />
 
-            </motion.button>
+            </button>
 
           </div>
 
           {/* CONTENT */}
 
-          <div className="flex flex-col flex-grow p-4 sm:p-5">
+          <div className="flex flex-col flex-grow p-3 sm:p-4">
 
-            <p className="text-emerald-700 dark:text-emerald-400 text-xs sm:text-sm font-semibold mb-2 truncate">
+            {/* BRAND */}
+
+            <p className="text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-1 truncate">
 
               {product.brand ||
                 product.category ||
@@ -304,32 +304,36 @@ export default function ProductCard({
 
             </p>
 
-            <h3 className="font-bold text-black dark:text-white text-[15px] sm:text-lg leading-snug mb-3 line-clamp-2 min-h-[44px] sm:min-h-[56px]">
+            {/* NAME */}
+
+            <h3 className="text-sm sm:text-base font-bold text-black dark:text-white leading-snug line-clamp-2 min-h-[42px] sm:min-h-[48px]">
 
               {product.name}
 
             </h3>
 
+            {/* RATING */}
+
             {!isResale &&
               product.rating?.average > 0 && (
 
-              <div className="flex items-center gap-1.5 mb-4">
+              <div className="flex items-center gap-1 mt-2">
 
-                <div className="flex items-center gap-0.5">
+                <div className="flex">
 
                   {[...Array(5)].map(
                     (_, i) => (
 
                     <FiStar
                       key={i}
-                      size={14}
+                      size={13}
                       className={`${
                         i <
                         Math.floor(
                           product.rating.average
                         )
                           ? 'text-yellow-400 fill-current'
-                          : 'text-slate-300 dark:text-slate-600'
+                          : 'text-gray-300 dark:text-gray-600'
                       }`}
                     />
 
@@ -337,7 +341,7 @@ export default function ProductCard({
 
                 </div>
 
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-xs text-gray-500">
 
                   {product.rating.average}
 
@@ -347,9 +351,11 @@ export default function ProductCard({
 
             )}
 
-            <div className="flex items-center gap-2 flex-wrap mb-5">
+            {/* PRICE */}
 
-              <span className="text-2xl font-black text-emerald-700 dark:text-emerald-400">
+            <div className="flex items-center gap-2 mt-3 flex-wrap">
+
+              <span className="text-lg sm:text-xl font-black text-emerald-700 dark:text-emerald-400">
 
                 ₹{price?.toLocaleString()}
 
@@ -357,7 +363,7 @@ export default function ProductCard({
 
               {originalPrice && (
 
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-xs sm:text-sm text-gray-500 line-through">
 
                   ₹{originalPrice?.toLocaleString()}
 
@@ -367,13 +373,9 @@ export default function ProductCard({
 
             </div>
 
-            <motion.button
-              whileHover={{
-                scale: 1.02
-              }}
-              whileTap={{
-                scale: 0.97
-              }}
+            {/* BUTTON */}
+
+            <button
               onClick={handleAddToCart}
               disabled={
                 adding ||
@@ -382,13 +384,13 @@ export default function ProductCard({
                   product.stock < 1
                 )
               }
-              className={`mt-auto w-full h-12 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${
+              className={`mt-4 h-11 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
                 product.stock !== undefined &&
                 product.stock < 1
-                  ? 'bg-green-100 dark:bg-gray-700 text-black dark:text-white cursor-not-allowed'
+                  ? 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white cursor-not-allowed'
                   : adding
-                  ? 'bg-emerald-400 text-white cursor-wait'
-                  : 'bg-gradient-to-r from-emerald-600 to-green-600 text-white hover:shadow-xl hover:shadow-emerald-500/20'
+                  ? 'bg-emerald-400 text-white'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white'
               }`}
             >
 
@@ -412,7 +414,7 @@ export default function ProductCard({
 
               )}
 
-            </motion.button>
+            </button>
 
           </div>
 

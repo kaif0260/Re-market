@@ -11,15 +11,16 @@ import {
 } from 'react-router-dom'
 
 import {
-  FiSearch,
-  FiShoppingCart,
-  FiHeart,
-  FiUser,
   FiMenu,
   FiX,
-  FiSun,
+  FiSearch,
+  FiUser,
+  FiShoppingCart,
+  FiHeart,
   FiMoon,
-  FiChevronDown
+  FiSun,
+  FiChevronDown,
+  FiAlertCircle
 } from 'react-icons/fi'
 
 import {
@@ -31,43 +32,33 @@ import {
   logout as logoutAction
 } from '../../store/slices/authSlice'
 
-import {
-  setSearchQuery
-} from '../../store/slices/productSlice'
-
 import './navbar.css'
 
 export default function Navbar() {
 
-  const [search, setSearch] =
-    useState('')
-
   const [mobileOpen, setMobileOpen] =
     useState(false)
 
-  const [userMenuOpen, setUserMenuOpen] =
+  const [profileOpen, setProfileOpen] =
     useState(false)
 
   const [theme, setTheme] =
     useState('light')
 
-  const [scrolled, setScrolled] =
-    useState(false)
-
-  const [searchFocused, setSearchFocused] =
-    useState(false)
+  const [search, setSearch] =
+    useState('')
 
   const dropdownRef =
     useRef(null)
-
-  const dispatch =
-    useDispatch()
 
   const navigate =
     useNavigate()
 
   const location =
     useLocation()
+
+  const dispatch =
+    useDispatch()
 
   const {
     isAuthenticated,
@@ -140,43 +131,7 @@ export default function Navbar() {
 
   }, [theme])
 
-  /* SCROLL */
-
-  useEffect(() => {
-
-    const handleScroll = () => {
-
-      setScrolled(
-        window.scrollY > 12
-      )
-
-    }
-
-    window.addEventListener(
-      'scroll',
-      handleScroll
-    )
-
-    return () =>
-
-      window.removeEventListener(
-        'scroll',
-        handleScroll
-      )
-
-  }, [])
-
-  /* CLOSE MENUS ON ROUTE CHANGE */
-
-  useEffect(() => {
-
-    setMobileOpen(false)
-
-    setUserMenuOpen(false)
-
-  }, [location.pathname])
-
-  /* CLICK OUTSIDE */
+  /* CLOSE DROPDOWN */
 
   useEffect(() => {
 
@@ -190,7 +145,7 @@ export default function Navbar() {
           )
         ) {
 
-          setUserMenuOpen(false)
+          setProfileOpen(false)
 
         }
 
@@ -202,7 +157,6 @@ export default function Navbar() {
     )
 
     return () =>
-
       document.removeEventListener(
         'mousedown',
         handleClickOutside
@@ -210,37 +164,17 @@ export default function Navbar() {
 
   }, [])
 
-  /* ESC CLOSE */
+  /* CLOSE ON ROUTE */
 
   useEffect(() => {
 
-    const handleEsc = (e) => {
+    setMobileOpen(false)
 
-      if (e.key === 'Escape') {
+    setProfileOpen(false)
 
-        setUserMenuOpen(false)
+  }, [location.pathname])
 
-        setMobileOpen(false)
-
-      }
-
-    }
-
-    document.addEventListener(
-      'keydown',
-      handleEsc
-    )
-
-    return () =>
-
-      document.removeEventListener(
-        'keydown',
-        handleEsc
-      )
-
-  }, [])
-
-  /* BODY SCROLL LOCK */
+  /* BODY LOCK */
 
   useEffect(() => {
 
@@ -265,468 +199,123 @@ export default function Navbar() {
 
   }, [mobileOpen])
 
-  const toggleTheme = () => {
-
-    setTheme(prev =>
-
-      prev === 'dark'
-        ? 'light'
-        : 'dark'
-
-    )
-
-  }
+  /* SEARCH */
 
   const handleSearch = (e) => {
 
     e.preventDefault()
 
-    const query =
-      search.trim()
-
-    if (!query) return
-
-    dispatch(
-      setSearchQuery(query)
-    )
+    if (!search.trim()) return
 
     navigate(
-      `/products?q=${encodeURIComponent(query)}`
+      `/products?q=${encodeURIComponent(search)}`
     )
 
-    setSearch('')
-
-    setMobileOpen(false)
-
   }
+
+  /* LOGOUT */
 
   const handleLogout = () => {
 
-    setUserMenuOpen(false)
-
-    setMobileOpen(false)
-
     dispatch(logoutAction())
 
-    localStorage.removeItem(
-      'token'
-    )
+    localStorage.removeItem('token')
 
-    localStorage.removeItem(
-      'user'
-    )
+    localStorage.removeItem('user')
 
-    setTimeout(() => {
-
-      navigate('/')
-
-    }, 100)
+    navigate('/')
 
   }
 
-  const isActive = (path) =>
+  /* ACTIVE LINK */
 
-    location.pathname === path ||
+  const isActive = (path) => {
 
-    (
-      path === '/resale' &&
-      location.pathname.startsWith(
-        '/resale'
-      )
+    return (
+      location.pathname === path
     )
+
+  }
 
   return (
 
-    <header
-      className={`app-navbar ${
-        scrolled
-          ? 'scrolled'
-          : ''
-      } ${
-        mobileOpen
-          ? 'mobile-open'
-          : ''
-      }`}
-    >
+    <header className="navbar">
 
-      <div className="navbar-inner container mx-auto">
+      <div className="navbar-container">
 
-        {/* LOGO */}
+        {/* LEFT */}
 
-        <Link
-          to="/"
-          className="navbar-brand"
-        >
-
-          <span className="logo-mark">
-
-            R
-
-          </span>
-
-          <span className="logo-text">
-
-            Re-Market
-
-          </span>
-
-        </Link>
-
-        {/* DESKTOP LINKS */}
-
-        <div className="nav-links hidden lg:flex">
-
-          <Link
-            to="/products"
-            className={`nav-link ${
-              isActive('/products')
-                ? 'active'
-                : ''
-            }`}
-          >
-
-            Products
-
-          </Link>
-
-          <Link
-            to="/resale"
-            className={`nav-link ${
-              isActive('/resale')
-                ? 'active'
-                : ''
-            }`}
-          >
-
-            Resale
-
-          </Link>
-
-          <Link
-            to="/deals"
-            className={`nav-link ${
-              isActive('/deals')
-                ? 'active'
-                : ''
-            }`}
-          >
-
-            Deals
-
-          </Link>
-
-        </div>
-
-        {/* SEARCH */}
-
-        <form
-          onSubmit={handleSearch}
-          className={`search-bar hidden lg:flex lg:flex-1 lg:max-w-md transition-all duration-300 ${
-            searchFocused
-              ? 'ring-2 ring-emerald-500/20'
-              : ''
-          }`}
-        >
-
-          <FiSearch
-            className="search-icon"
-            size={18}
-          />
-
-          <input
-            type="search"
-            value={search}
-            onFocus={() =>
-              setSearchFocused(true)
-            }
-            onBlur={() =>
-              setSearchFocused(false)
-            }
-            onChange={(e) =>
-              setSearch(
-                e.target.value
-              )
-            }
-            placeholder="Search products..."
-            className="search-input"
-          />
-
-        </form>
-
-        {/* ACTIONS */}
-
-        <div className="nav-actions">
-
-          {/* THEME */}
+        <div className="nav-left">
 
           <button
-            type="button"
-            className="icon-btn"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
+            className="mobile-menu-btn"
+            onClick={() =>
+              setMobileOpen(
+                !mobileOpen
+              )
+            }
           >
 
-            {theme === 'light'
-              ? (
-                <FiMoon size={18} />
-              )
-              : (
-                <FiSun size={18} />
-              )}
+            {
+              mobileOpen
+                ? <FiX />
+                : <FiMenu />
+            }
 
           </button>
 
-          {/* CART */}
+          {/* LOGO */}
 
           <Link
-            to="/cart"
-            className="icon-btn relative"
+            to="/"
+            className="logo"
           >
 
-            <FiShoppingCart size={19} />
+            <div className="logo-box">
 
-            {cartCount > 0 && (
+              <span className="logo-r">
 
-              <span className="absolute -top-2 -right-2 min-w-[20px] h-[20px] rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center px-1">
-
-                {cartCount}
+                R
 
               </span>
 
-            )}
+            </div>
 
-          </Link>
+            <div className="logo-content">
 
-          {/* WISHLIST */}
+              <span className="logo-title">
 
-          <Link
-            to="/wishlist"
-            className="icon-btn"
-          >
+                Re-Market
 
-            <FiHeart size={18} />
+              </span>
 
-          </Link>
+              <span className="logo-subtitle">
 
-          {/* USER */}
+                Smart Marketplace
 
-          {isAuthenticated ? (
-
-            <div
-              className="relative"
-              ref={dropdownRef}
-            >
-
-              <button
-                type="button"
-                className="user-trigger"
-                onClick={() =>
-
-                  setUserMenuOpen(
-                    prev => !prev
-                  )
-
-                }
-              >
-
-                <FiUser size={17} />
-
-                <span className="user-label">
-
-                  {
-                    user?.name?.split(' ')[0] ||
-                    'Profile'
-                  }
-
-                </span>
-
-                <FiChevronDown
-                  size={14}
-                  className={`transition-transform duration-300 ${
-                    userMenuOpen
-                      ? 'rotate-180'
-                      : ''
-                  }`}
-                />
-
-              </button>
-
-              {userMenuOpen && (
-
-                <div className="user-dropdown animate-in fade-in zoom-in-95 duration-200">
-
-                  <Link
-                    to="/profile"
-                    className="dropdown-item"
-                  >
-
-                    Profile
-
-                  </Link>
-
-                  <Link
-                    to="/orders"
-                    className="dropdown-item"
-                  >
-
-                    Orders
-
-                  </Link>
-
-                  {user?.role ===
-                    'seller' && (
-
-                    <Link
-                      to="/seller/dashboard"
-                      className="dropdown-item"
-                    >
-
-                      Seller Dashboard
-
-                    </Link>
-
-                  )}
-
-                  {user?.role ===
-                    'admin' && (
-
-                    <Link
-                      to="/admin/dashboard"
-                      className="dropdown-item"
-                    >
-
-                      Admin Panel
-
-                    </Link>
-
-                  )}
-
-                  <button
-                    type="button"
-                    className="dropdown-item danger"
-                    onClick={handleLogout}
-                  >
-
-                    Logout
-
-                  </button>
-
-                </div>
-
-              )}
+              </span>
 
             </div>
 
-          ) : (
-
-            <div className="hidden lg:flex items-center gap-2">
-
-              <Link
-                to="/login"
-                className="btn-outline"
-              >
-
-                Login
-
-              </Link>
-
-              <Link
-                to="/register"
-                className="btn-primary"
-              >
-
-                Join Free
-
-              </Link>
-
-            </div>
-
-          )}
-
-          {/* MOBILE TOGGLE */}
-
-          <button
-            type="button"
-            className="mobile-toggle lg:hidden"
-            onClick={() =>
-
-              setMobileOpen(
-                prev => !prev
-              )
-
-            }
-          >
-
-            {mobileOpen
-              ? (
-                <FiX size={22} />
-              )
-              : (
-                <FiMenu size={22} />
-              )}
-
-          </button>
+          </Link>
 
         </div>
 
-      </div>
+        {/* CENTER */}
 
-      {/* MOBILE PANEL */}
+        <div className="nav-center">
 
-      <>
+          {/* DESKTOP NAV */}
 
-        {mobileOpen && (
-
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-            onClick={() =>
-              setMobileOpen(false)
-            }
-          />
-
-        )}
-
-        <div
-          className={`mobile-panel ${
-            mobileOpen
-              ? 'open'
-              : ''
-          }`}
-        >
-
-          {/* MOBILE SEARCH */}
-
-          <form
-            onSubmit={handleSearch}
-            className="mobile-search"
-          >
-
-            <FiSearch
-              className="search-icon"
-              size={18}
-            />
-
-            <input
-              type="search"
-              value={search}
-              onChange={(e) =>
-                setSearch(
-                  e.target.value
-                )
-              }
-              placeholder="Search products..."
-              className="search-input"
-            />
-
-          </form>
-
-          {/* MOBILE LINKS */}
-
-          <div className="mobile-links">
+          <div className="desktop-nav">
 
             <Link
               to="/products"
-              className="mobile-link"
+              className={
+                isActive('/products')
+                  ? 'active'
+                  : ''
+              }
             >
 
               Products
@@ -735,7 +324,11 @@ export default function Navbar() {
 
             <Link
               to="/resale"
-              className="mobile-link"
+              className={
+                isActive('/resale')
+                  ? 'active'
+                  : ''
+              }
             >
 
               Resale
@@ -744,115 +337,278 @@ export default function Navbar() {
 
             <Link
               to="/deals"
-              className="mobile-link"
+              className={
+                isActive('/deals')
+                  ? 'active'
+                  : ''
+              }
             >
 
               Deals
 
             </Link>
 
-            {isAuthenticated ? (
-
-              <>
-
-                <Link
-                  to="/profile"
-                  className="mobile-link"
-                >
-
-                  Profile
-
-                </Link>
-
-                <Link
-                  to="/orders"
-                  className="mobile-link"
-                >
-
-                  Orders
-
-                </Link>
-
-                <Link
-                  to="/cart"
-                  className="mobile-link"
-                >
-
-                  Cart ({cartCount})
-
-                </Link>
-
-                {user?.role ===
-                  'seller' && (
-
-                  <Link
-                    to="/seller/dashboard"
-                    className="mobile-link"
-                  >
-
-                    Seller Dashboard
-
-                  </Link>
-
-                )}
-
-                {user?.role ===
-                  'admin' && (
-
-                  <Link
-                    to="/admin/dashboard"
-                    className="mobile-link"
-                  >
-
-                    Admin Panel
-
-                  </Link>
-
-                )}
-
-                <button
-                  type="button"
-                  className="btn-outline w-full mt-2"
-                  onClick={handleLogout}
-                >
-
-                  Logout
-
-                </button>
-
-              </>
-
-            ) : (
-
-              <div className="flex flex-col gap-3 mt-3">
-
-                <Link
-                  to="/login"
-                  className="btn-outline text-center"
-                >
-
-                  Login
-
-                </Link>
-
-                <Link
-                  to="/register"
-                  className="btn-primary text-center"
-                >
-
-                  Join Free
-
-                </Link>
-
-              </div>
-
-            )}
-
           </div>
+
+          {/* SEARCH */}
+
+          <form
+            onSubmit={handleSearch}
+            className="search-bar"
+          >
+
+            <FiSearch className="search-icon" />
+
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) =>
+                setSearch(
+                  e.target.value
+                )
+              }
+            />
+
+          </form>
 
         </div>
 
-      </>
+        {/* RIGHT */}
+
+        <div className="nav-right">
+
+          {/* THEME */}
+
+          <button
+            className="icon-btn desktop-only"
+            onClick={() =>
+
+              setTheme(
+
+                theme === 'dark'
+                  ? 'light'
+                  : 'dark'
+
+              )
+
+            }
+          >
+
+            {
+              theme === 'dark'
+                ? <FiSun />
+                : <FiMoon />
+            }
+
+          </button>
+
+          {/* WISHLIST */}
+
+          <Link
+            to="/wishlist"
+            className="icon-btn desktop-only"
+          >
+
+            <FiHeart />
+
+          </Link>
+
+          {/* CART */}
+
+          <Link
+            to="/cart"
+            className="icon-btn desktop-only cart-btn"
+          >
+
+            <FiShoppingCart />
+
+            {
+              cartCount > 0 && (
+
+                <span className="cart-badge">
+
+                  {cartCount}
+
+                </span>
+
+              )
+            }
+
+          </Link>
+
+          {/* LOGIN / PROFILE */}
+
+          {
+            !isAuthenticated ? (
+
+              <Link
+                to="/login"
+                className="login-btn"
+              >
+
+                Login
+
+              </Link>
+
+            ) : (
+
+              <div
+                className="profile-wrapper"
+                ref={dropdownRef}
+              >
+
+                <button
+                  className="profile-btn"
+                  onClick={() =>
+                    setProfileOpen(
+                      !profileOpen
+                    )
+                  }
+                >
+
+                  <FiUser />
+
+                  <FiChevronDown />
+
+                </button>
+
+                {
+                  profileOpen && (
+
+                    <div className="profile-dropdown">
+
+                      {
+                        (
+                          user?.role === 'admin' ||
+                          user?.role === 'seller'
+                        ) && (
+
+                          <Link
+                            to={
+                              user?.role === 'admin'
+                                ? '/admin/dashboard'
+                                : '/seller/dashboard'
+                            }
+                            className="dropdown-item"
+                          >
+
+                            {
+                              user?.role === 'admin'
+                                ? 'Admin Dashboard'
+                                : 'Seller Dashboard'
+                            }
+
+                          </Link>
+
+                        )
+                      }
+
+                      <Link
+                        to="/profile"
+                        className="dropdown-item"
+                      >
+
+                        Profile
+
+                      </Link>
+
+                      <Link
+                        to="/orders"
+                        className="dropdown-item"
+                      >
+
+                        Orders
+
+                      </Link>
+
+                      <Link
+                        to="/wishlist"
+                        className="dropdown-item"
+                      >
+
+                        Wishlist
+
+                      </Link>
+
+                      <Link
+                        to="/complaints"
+                        className="dropdown-item"
+                      >
+
+                        <FiAlertCircle />
+
+                        Complaints
+
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="dropdown-item logout-btn"
+                      >
+
+                        Logout
+
+                      </button>
+
+                    </div>
+
+                  )
+                }
+
+              </div>
+
+            )
+          }
+
+        </div>
+
+      </div>
+
+      {/* MOBILE OVERLAY */}
+
+      <div
+        className={`mobile-overlay ${
+          mobileOpen
+            ? 'show'
+            : ''
+        }`}
+        onClick={() =>
+          setMobileOpen(false)
+        }
+      />
+
+      {/* MOBILE DRAWER */}
+
+      <div
+        className={`mobile-drawer ${
+          mobileOpen
+            ? 'open'
+            : ''
+        }`}
+      >
+
+        <Link to="/products">
+          Products
+        </Link>
+
+        <Link to="/resale">
+          Resale
+        </Link>
+
+        <Link to="/deals">
+          Deals
+        </Link>
+
+        <Link to="/wishlist">
+          Wishlist
+        </Link>
+
+        <Link to="/cart">
+          Cart
+        </Link>
+
+      </div>
 
     </header>
 

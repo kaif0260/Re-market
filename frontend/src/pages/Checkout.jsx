@@ -294,30 +294,34 @@ export default function Checkout() {
     return { payMode: '', payerSummary: '' }
   }, [paymentMethod, upiId, cardNumber, netbankBankId, emiMonths])
 
-  return (
+return (
 
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-lime-50 py-10 px-4">
+    <div className="min-h-screen bg-white dark:bg-[#0f172a] py-6 px-3 sm:py-10 sm:px-4">
 
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-4 lg:gap-8">
 
         {/* LEFT */}
 
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-4 lg:space-y-8">
 
           {/* ADDRESS */}
 
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+          <div className="bg-white dark:bg-[#1f2937] rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-8 border border-gray-100 dark:border-gray-700">
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4 lg:mb-6">
 
               <div>
 
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">
+
                   Delivery Address
+
                 </h2>
 
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-1">
+
                   Select your delivery address
+
                 </p>
 
               </div>
@@ -337,15 +341,15 @@ export default function Checkout() {
 
             {addresses.length === 0 ? (
 
-              <div className="border border-red-300 bg-red-50 rounded-2xl p-6">
+              <div className="border border-red-300 bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 sm:p-6">
 
-                <h3 className="text-red-600 font-bold text-lg">
+                <h3 className="text-red-600 dark:text-red-400 font-bold text-base sm:text-lg">
 
                   No Delivery Address Found
 
                 </h3>
 
-                <p className="text-red-500 text-sm mt-2">
+                <p className="text-red-500 dark:text-red-300 text-xs sm:text-sm mt-2">
 
                   Please add a delivery address before placing your order.
 
@@ -355,7 +359,7 @@ export default function Checkout() {
 
             ) : (
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
 
                 {addresses.map((addr) => (
 
@@ -364,15 +368,15 @@ export default function Checkout() {
                     onClick={() =>
                       setSelectedAddress(addr)
                     }
-                    className={`w-full text-left p-5 rounded-2xl border transition ${
+                    className={`w-full text-left p-4 sm:p-5 rounded-xl sm:rounded-2xl border transition ${
                       selectedAddress?._id ===
                       addr._id
-                        ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                        : 'border-gray-200 bg-white hover:border-emerald-300'
+                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 dark:border-emerald-400 shadow-lg'
+                        : 'border-gray-200 bg-white dark:bg-[#1f2937] dark:border-gray-600 hover:border-emerald-300'
                     }`}
                   >
 
-                    <p className="font-bold text-gray-800">
+                    <p className="font-bold text-gray-800 dark:text-gray-100 text-sm sm:text-base">
 
                       {addr.name}
                       {' '}
@@ -382,7 +386,7 @@ export default function Checkout() {
 
                     </p>
 
-                    <p className="text-gray-500 mt-1">
+                    <p className="text-gray-500 dark:text-gray-400 mt-1 text-xs sm:text-sm">
 
                       {addr.address},
                       {' '}
@@ -408,42 +412,42 @@ export default function Checkout() {
 
           {/* PAYMENT */}
 
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+          <div className="bg-white dark:bg-[#1f2937] rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-8 border border-gray-100 dark:border-gray-700">
 
-            <h2 className="text-2xl font-bold text-gray-800 mb-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
 
               Payment Method
 
             </h2>
-            <p className="text-sm text-slate-500 mb-6">
-              Demo gateway — same steps as a live checkout (validation + secure sheet). No real charge, no Razorpay account needed.
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 lg:mb-6">
+              Demo gateway — same steps as a live checkout. No real charge.
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
 
               <button
                 type="button"
                 onClick={() => setPaymentMethod('cod')}
-                className={`w-full p-5 rounded-2xl border text-left transition ${
+                className={`w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl border text-left transition ${
                   paymentMethod === 'cod'
-                    ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-emerald-200'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1f2937] hover:border-emerald-300'
                 }`}
               >
-                <p className="font-semibold text-gray-900">Cash on Delivery</p>
-                <p className="text-sm text-gray-500 mt-1">Pay with cash when your order arrives</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">Cash on Delivery</p>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Pay with cash when your order arrives</p>
               </button>
 
               {paymentMethod === 'cod' && (
-                <label className="flex items-start gap-3 p-4 rounded-2xl border border-emerald-200 bg-emerald-50/80 cursor-pointer">
+                <label className="flex items-start gap-3 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-emerald-200 dark:border-emerald-600 bg-emerald-50/80 dark:bg-emerald-900/20 cursor-pointer">
                   <input
                     type="checkbox"
                     className="mt-1 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                     checked={codAcknowledged}
                     onChange={(e) => setCodAcknowledged(e.target.checked)}
                   />
-                  <span className="text-sm text-gray-800">
-                    I understand cash payment is due at delivery and I will keep exact change if possible.
+                  <span className="text-xs sm:text-sm text-gray-800 dark:text-gray-200">
+                    I understand cash payment is due at delivery.
                   </span>
                 </label>
               )}
@@ -451,48 +455,48 @@ export default function Checkout() {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('upi')}
-                className={`w-full p-5 rounded-2xl border text-left transition ${
+                className={`w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl border text-left transition ${
                   paymentMethod === 'upi'
-                    ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-emerald-200'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1f2937] hover:border-emerald-200'
                 }`}
               >
-                <p className="font-semibold text-gray-900">UPI</p>
-                <p className="text-sm text-gray-500 mt-1">Google Pay, PhonePe, Paytm, BHIM — demo flow</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">UPI</p>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Google Pay, PhonePe, Paytm — demo</p>
               </button>
 
               {paymentMethod === 'upi' && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-3">
-                  <label className="block text-sm font-medium text-gray-800">UPI ID (VPA)</label>
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-3">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">UPI ID (VPA)</label>
                   <input
                     type="text"
                     value={upiId}
                     onChange={(e) => setUpiId(e.target.value.trim())}
                     placeholder="yourname@paytm"
                     autoComplete="off"
-                    className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400 font-mono text-sm"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400 font-mono text-xs sm:text-sm"
                   />
-                  <p className="text-xs text-gray-500">Format: username@bank or username@ybl — required before checkout.</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Format: username@bank — required before checkout.</p>
                 </div>
               )}
 
               <button
                 type="button"
                 onClick={() => setPaymentMethod('card')}
-                className={`w-full p-5 rounded-2xl border text-left transition ${
+                className={`w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl border text-left transition ${
                   paymentMethod === 'card'
-                    ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-emerald-200'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1f2937] hover:border-emerald-200'
                 }`}
               >
-                <p className="font-semibold text-gray-900">Credit / Debit card</p>
-                <p className="text-sm text-gray-500 mt-1">Visa, Mastercard, RuPay — validated demo (no charge)</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">Credit / Debit Card</p>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Visa, Mastercard, RuPay — demo</p>
               </button>
 
               {paymentMethod === 'card' && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-3 sm:space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-800 mb-1">Card number</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Card number</label>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -503,33 +507,33 @@ export default function Checkout() {
                         setCardNumber(spaced)
                       }}
                       placeholder="4111 1111 1111 1111"
-                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400 font-mono tracking-wider"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400 font-mono text-xs sm:text-sm"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Demo: 4111 1111 1111 1111 passes validation (Luhn).</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Demo card: 4111 1111 1111 1111</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-800 mb-1">Name on card</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Name on card</label>
                     <input
                       type="text"
                       value={cardName}
                       onChange={(e) => setCardName(e.target.value)}
                       placeholder="As printed on card"
-                      className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-800 mb-1">Valid thru (MM/YY)</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Valid thru (MM/YY)</label>
                       <input
                         type="text"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
                         placeholder="12/28"
-                        className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-800 mb-1">CVV</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">CVV</label>
                       <input
                         type="password"
                         inputMode="numeric"
@@ -537,7 +541,7 @@ export default function Checkout() {
                         value={cardCvv}
                         onChange={(e) => setCardCvv(digitsOnly(e.target.value).slice(0, 4))}
                         placeholder="123"
-                        className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
                       />
                     </div>
                   </div>
@@ -547,23 +551,23 @@ export default function Checkout() {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('netbanking')}
-                className={`w-full p-5 rounded-2xl border text-left transition ${
+                className={`w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl border text-left transition ${
                   paymentMethod === 'netbanking'
-                    ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-emerald-200'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1f2937] hover:border-emerald-200'
                 }`}
               >
-                <p className="font-semibold text-gray-900">Net banking</p>
-                <p className="text-sm text-gray-500 mt-1">Pay from your bank account — demo</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">Net Banking</p>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Pay from your bank account</p>
               </button>
 
               {paymentMethod === 'netbanking' && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-2">
-                  <label className="block text-sm font-medium text-gray-800">Select bank</label>
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-2">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">Select bank</label>
                   <select
                     value={netbankBankId}
                     onChange={(e) => setNetbankBankId(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-gray-200 dark:border-gray-600 outline-none focus:ring-2 focus:ring-emerald-400 bg-white dark:bg-[#1f2937]"
                   >
                     <option value="">Choose your bank</option>
                     {NETBANKING_BANKS.map((b) => (
@@ -578,19 +582,19 @@ export default function Checkout() {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('emi')}
-                className={`w-full p-5 rounded-2xl border text-left transition ${
+                className={`w-full p-4 sm:p-5 rounded-xl sm:rounded-2xl border text-left transition ${
                   paymentMethod === 'emi'
-                    ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-emerald-200'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 shadow-lg'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-[#1f2937] hover:border-emerald-200'
                 }`}
               >
-                <p className="font-semibold text-gray-900">EMI</p>
-                <p className="text-sm text-gray-500 mt-1">Split into monthly instalments — demo</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base">EMI</p>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Split into monthly instalments</p>
               </button>
 
               {paymentMethod === 'emi' && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 space-y-2">
-                  <label className="block text-sm font-medium text-gray-800">Tenure</label>
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-2">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-800 dark:text-gray-200">Tenure</label>
                   <select
                     value={emiMonths}
                     onChange={(e) => setEmiMonths(e.target.value)}

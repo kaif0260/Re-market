@@ -5,191 +5,396 @@ import {
 
 import axios from '../../api/axios'
 
-// FETCH CART
+/* =========================================
+   FETCH CART
+========================================= */
 
-export const fetchCart = createAsyncThunk(
-  'cart/fetchCart',
+export const fetchCart =
+  createAsyncThunk(
 
-  async (_, thunkAPI) => {
+    'cart/fetchCart',
 
-    try {
+    async (_, thunkAPI) => {
 
-      const { data } = await axios.get('/cart')
+      try {
 
-      return data.cart
+        const { data } =
+          await axios.get('/cart')
 
-    } catch (err) {
+        return data.cart
 
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message ||
-        'Failed to fetch cart'
-      )
+      } catch (err) {
 
-    }
+        return thunkAPI.rejectWithValue(
 
-  }
-)
+          err.response?.data?.message ||
 
-// UPDATE CART ITEM
+          'Failed to fetch cart'
 
-export const updateCartItem = createAsyncThunk(
+        )
 
-  'cart/updateCartItem',
-
-  async ({ itemId, quantity }, thunkAPI) => {
-
-    try {
-
-      const { data } = await axios.put(
-
-        `/cart/${itemId}`,
-
-        { quantity }
-
-      )
-
-      return data.cart
-
-    } catch (err) {
-
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message ||
-        'Failed to update cart'
-      )
-
-    }
-
-  }
-)
-
-// REMOVE ITEM
-
-export const removeFromCart = createAsyncThunk(
-
-  'cart/removeFromCart',
-
-  async (itemId, thunkAPI) => {
-
-    try {
-
-      const { data } = await axios.delete(
-        `/cart/${itemId}`
-      )
-
-      return data.cart
-
-    } catch (err) {
-
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message ||
-        'Failed to remove item'
-      )
-
-    }
-
-  }
-)
-
-// CLEAR CART
-
-export const clearCart = createAsyncThunk(
-
-  'cart/clearCart',
-
-  async (_, thunkAPI) => {
-
-    try {
-
-      await axios.delete('/cart')
-
-      return {
-        items: []
       }
 
-    } catch (err) {
+    }
 
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.message ||
-        'Failed to clear cart'
-      )
+  )
+
+/* =========================================
+   ADD TO CART
+========================================= */
+
+export const addToCart =
+  createAsyncThunk(
+
+    'cart/addToCart',
+
+    async (product, thunkAPI) => {
+
+      try {
+
+        const { data } =
+          await axios.post(
+
+            '/cart',
+
+            {
+              productId:
+                product._id,
+
+              quantity:
+                product.quantity || 1
+            }
+
+          )
+
+        return data.cart
+
+      } catch (err) {
+
+        return thunkAPI.rejectWithValue(
+
+          err.response?.data?.message ||
+
+          'Failed to add product'
+
+        )
+
+      }
 
     }
 
-  }
-)
+  )
 
-const cartSlice = createSlice({
+/* =========================================
+   UPDATE CART ITEM
+========================================= */
 
-  name: 'cart',
+export const updateCartItem =
+  createAsyncThunk(
 
-  initialState: {
+    'cart/updateCartItem',
 
-    cart: {
-      items: []
-    },
+    async (
+      {
+        itemId,
+        quantity
+      },
+      thunkAPI
+    ) => {
 
-    loading: false,
+      try {
 
-    error: null
+        const { data } =
+          await axios.put(
 
+            `/cart/${itemId}`,
+
+            { quantity }
+
+          )
+
+        return data.cart
+
+      } catch (err) {
+
+        return thunkAPI.rejectWithValue(
+
+          err.response?.data?.message ||
+
+          'Failed to update cart'
+
+        )
+
+      }
+
+    }
+
+  )
+
+/* =========================================
+   REMOVE FROM CART
+========================================= */
+
+export const removeFromCart =
+  createAsyncThunk(
+
+    'cart/removeFromCart',
+
+    async (
+      itemId,
+      thunkAPI
+    ) => {
+
+      try {
+
+        const { data } =
+          await axios.delete(
+
+            `/cart/${itemId}`
+
+          )
+
+        return data.cart
+
+      } catch (err) {
+
+        return thunkAPI.rejectWithValue(
+
+          err.response?.data?.message ||
+
+          'Failed to remove item'
+
+        )
+
+      }
+
+    }
+
+  )
+
+/* =========================================
+   CLEAR CART
+========================================= */
+
+export const clearCart =
+  createAsyncThunk(
+
+    'cart/clearCart',
+
+    async (_, thunkAPI) => {
+
+      try {
+
+        await axios.delete('/cart')
+
+        return {
+          items: []
+        }
+
+      } catch (err) {
+
+        return thunkAPI.rejectWithValue(
+
+          err.response?.data?.message ||
+
+          'Failed to clear cart'
+
+        )
+
+      }
+
+    }
+
+  )
+
+/* =========================================
+   INITIAL STATE
+========================================= */
+
+const initialState = {
+
+  cart: {
+    items: []
   },
 
-  reducers: {},
+  loading: false,
 
-  extraReducers: (builder) => {
+  error: null
 
-    builder
+}
 
-      // FETCH CART
+/* =========================================
+   SLICE
+========================================= */
 
-      .addCase(fetchCart.pending, (state) => {
+const cartSlice =
+  createSlice({
 
-        state.loading = true
+    name: 'cart',
 
-      })
+    initialState,
 
-      .addCase(fetchCart.fulfilled, (state, action) => {
+    reducers: {},
 
-        state.loading = false
+    extraReducers: builder => {
 
-        state.cart = action.payload
+      builder
 
-      })
+        /* ================================
+           FETCH CART
+        ================================ */
 
-      .addCase(fetchCart.rejected, (state, action) => {
+        .addCase(
+          fetchCart.pending,
 
-        state.loading = false
+          state => {
 
-        state.error = action.payload
+            state.loading = true
 
-      })
+            state.error = null
 
-      // UPDATE CART
+          }
+        )
 
-      .addCase(updateCartItem.fulfilled, (state, action) => {
+        .addCase(
+          fetchCart.fulfilled,
 
-        state.cart = action.payload
+          (
+            state,
+            action
+          ) => {
 
-      })
+            state.loading = false
 
-      // REMOVE ITEM
+            state.cart =
+              action.payload
 
-      .addCase(removeFromCart.fulfilled, (state, action) => {
+          }
+        )
 
-        state.cart = action.payload
+        .addCase(
+          fetchCart.rejected,
 
-      })
+          (
+            state,
+            action
+          ) => {
 
-      // CLEAR CART
+            state.loading = false
 
-      .addCase(clearCart.fulfilled, (state, action) => {
+            state.error =
+              action.payload
 
-        state.cart = action.payload
+          }
+        )
 
-      })
+        /* ================================
+           ADD TO CART
+        ================================ */
 
-  }
+        .addCase(
+          addToCart.pending,
 
-})
+          state => {
 
-export default cartSlice.reducer
+            state.loading = true
+
+          }
+        )
+
+        .addCase(
+          addToCart.fulfilled,
+
+          (
+            state,
+            action
+          ) => {
+
+            state.loading = false
+
+            state.cart =
+              action.payload
+
+          }
+        )
+
+        .addCase(
+          addToCart.rejected,
+
+          (
+            state,
+            action
+          ) => {
+
+            state.loading = false
+
+            state.error =
+              action.payload
+
+          }
+        )
+
+        /* ================================
+           UPDATE CART
+        ================================ */
+
+        .addCase(
+          updateCartItem.fulfilled,
+
+          (
+            state,
+            action
+          ) => {
+
+            state.cart =
+              action.payload
+
+          }
+        )
+
+        /* ================================
+           REMOVE ITEM
+        ================================ */
+
+        .addCase(
+          removeFromCart.fulfilled,
+
+          (
+            state,
+            action
+          ) => {
+
+            state.cart =
+              action.payload
+
+          }
+        )
+
+        /* ================================
+           CLEAR CART
+        ================================ */
+
+        .addCase(
+          clearCart.fulfilled,
+
+          (
+            state,
+            action
+          ) => {
+
+            state.cart =
+              action.payload
+
+          }
+        )
+
+    }
+
+  })
+
+/* =========================================
+   EXPORT
+========================================= */
+
+export default
+cartSlice.reducer
